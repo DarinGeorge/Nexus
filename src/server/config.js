@@ -2,8 +2,8 @@ const { ApolloServer } = require('apollo-server');
 const gql = require('graphql-tag');
 const mongoose = require('mongoose');
 
-const Post = require('../models/Post');
-const { DB } = require('../../../next.config');
+const Post = require('./models/Post');
+const { DB } = require('../../next.config');
 
 const typeDefs = gql`
   type Post {
