@@ -7,7 +7,8 @@ const { DB } = require('../../next.config');
 
 const server = new ApolloServer({
   typeDefs,
-  resolvers
+  resolvers,
+  context: ({ req }) => ({ req })
 });
 
 mongoose
