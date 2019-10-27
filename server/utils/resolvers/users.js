@@ -1,11 +1,8 @@
 const User = require('../../models/User');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const {
-  validateRegisterInput,
-  validateLoginInput
-} = require('../../utils/validators');
-const { SECRET_KEY } = require('../../../../next.config.js');
+const { validateRegisterInput, validateLoginInput } = require('../validators');
+const { SECRET_KEY } = require('../../env');
 const { UserInputError } = require('apollo-server');
 
 function generateToken(user) {

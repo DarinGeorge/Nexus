@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 
 const typeDefs = require('./utils/typeDefs');
 const resolvers = require('./utils/resolvers');
-const { DB } = require('../../next.config');
+const { DB } = require('./env');
 
 const server = new ApolloServer({
   typeDefs,
