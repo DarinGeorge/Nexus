@@ -11,12 +11,6 @@ const PostSchema = new Schema({
       createdAt: String
     }
   ],
-  likes: [
-    {
-      alias: String,
-      createdAt: String
-    }
-  ],
   user: {
     type: Schema.Types.ObjectId,
     ref: 'users'
