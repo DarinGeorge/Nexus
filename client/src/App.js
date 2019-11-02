@@ -10,6 +10,7 @@ import Feed from './pages/feed';
 // Components
 import Layout from './components/base/layout';
 import { AuthProvider } from './utils/context/auth';
+import { AuthRoute, ProtectedRoute } from './utils/helpers/routeTypes';
 
 function App() {
   return (
@@ -17,9 +18,9 @@ function App() {
       <Router>
         <Layout>
           <Route exact path='/' component={Home} />
-          <Route exact path='/auth/login' component={Login} />
-          <Route exact path='/auth/register' component={Register} />
-          <Route exact path='/feed' component={Feed} />
+          <AuthRoute exact path='/auth/login' component={Login} />
+          <AuthRoute exact path='/auth/register' component={Register} />
+          <ProtectedRoute exact path='/feed' component={Feed} />
         </Layout>
       </Router>
     </AuthProvider>
