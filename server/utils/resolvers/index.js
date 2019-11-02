@@ -3,6 +3,9 @@ const usersResolvers = require('./users');
 const commentsResolvers = require('./comments');
 
 module.exports = {
+  Post: {
+    commentCount: parent => parent.comments.length
+  },
   Query: {
     ...postsResolvers.Query
   },

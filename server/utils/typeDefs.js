@@ -7,11 +7,12 @@ module.exports = gql`
     createdAt: String!
     alias: String!
     comments: [Comment]!
+    commentCount: Int!
   }
   type Comment {
     id: ID!
     createdAt: String!
-    username: String!
+    alias: String!
     body: String!
   }
   type User {
@@ -28,8 +29,8 @@ module.exports = gql`
     email: String!
   }
   type Query {
-    getPosts: [Post]
-    getPost(postId: ID!): Post
+    posts: [Post]
+    post(postId: ID!): Post
   }
   type Mutation {
     register(registerInput: RegisterInput): User!
