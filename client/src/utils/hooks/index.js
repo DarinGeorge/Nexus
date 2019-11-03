@@ -36,6 +36,7 @@ export const useForm = (callback, initialState = {}) => {
           }, 5000);
         });
       } else {
+        setSubmitting(false);
         callback();
       }
     }

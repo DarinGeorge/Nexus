@@ -18,6 +18,7 @@ import { SnackbarProvider } from 'notistack';
 import { useForm } from '../../utils/hooks';
 import { useHistory } from 'react-router-dom';
 import { AuthContext } from '../../utils/context/auth';
+import { REGISTER_USER } from '../../gql/mutations';
 
 function Copyright() {
   return (
@@ -210,27 +211,3 @@ export default function IntegrationNotistack() {
     </SnackbarProvider>
   );
 }
-
-const REGISTER_USER = gql`
-  mutation register(
-    $alias: String!
-    $email: String!
-    $password: String!
-    $confirmPassword: String!
-  ) {
-    register(
-      registerInput: {
-        alias: $alias
-        email: $email
-        password: $password
-        confirmPassword: $confirmPassword
-      }
-    ) {
-      id
-      email
-      alias
-      createdAt
-      token
-    }
-  }
-`;

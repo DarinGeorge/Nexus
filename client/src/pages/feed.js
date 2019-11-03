@@ -1,11 +1,13 @@
-import React from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useQuery } from '@apollo/react-hooks';
-import gql from 'graphql-tag';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
 
-import PostFeed from '../components/Feed/PostFeed.js';
+import { AuthContext } from '../utils/context/auth';
+import PostFeed from '../components/Feed/PostFeed';
 import PostLoader from '../components/Feed/PostLoader';
+import PostCreator from '../components/Feed/PostCreator';
+import { FETCH_POSTS } from '../gql/queries';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -15,33 +17,22 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const FETCH_POSTS = gql`
-  {
-    posts {
-      id
-      body
-      createdAt
-      alias
-      commentCount
-      comments {
-        id
-        alias
-        createdAt
-        body
-      }
-    }
-  }
-`;
-
 function Feed() {
   const classes = useStyles();
   const { loading, data } = useQuery(FETCH_POSTS);
+  const { user } = useContext(AuthContext);
 
   if (!loading)
     return (
       <>
         <div className={classes.root}>
           <Grid container>
+            {user && (
+              <Grid item xs={8}>
+                <PostCreator />
+              </Grid>
+            )}
+
             <Grid item xs={8}>
               <PostFeed loading={loading} data={data} />
             </Grid>

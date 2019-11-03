@@ -11,12 +11,12 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import gql from 'graphql-tag';
 import { useForm } from '../../utils/hooks';
 import { SnackbarProvider } from 'notistack';
 import { useMutation } from '@apollo/react-hooks';
 import { useHistory } from 'react-router-dom';
 import { AuthContext } from '../../utils/context/auth';
+import { LOGIN_USER } from '../../gql/mutations';
 
 function Copyright() {
   return (
@@ -174,15 +174,3 @@ export default function IntegrationNotistack() {
     </SnackbarProvider>
   );
 }
-
-const LOGIN_USER = gql`
-  mutation login($alias: String!, $password: String!) {
-    login(alias: $alias, password: $password) {
-      id
-      email
-      alias
-      createdAt
-      token
-    }
-  }
-`;
