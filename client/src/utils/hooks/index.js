@@ -26,7 +26,7 @@ export const useForm = (callback, initialState = {}) => {
           const handleNotify = variant => {
             enqueueSnackbar(value, {
               variant,
-              autoHideDuration: 1500
+              autoHideDuration: 3000
             });
           };
 

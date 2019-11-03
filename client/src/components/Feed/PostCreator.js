@@ -32,20 +32,19 @@ function PostCreator() {
     createPost();
   }
 
-  console.log(values.body);
-
   return (
     <div>
       <form onSubmit={handleSubmit}>
         <TextField
           variant='outlined'
           margin='normal'
-          required
           fullWidth
           id='poster'
           name='body'
           onChange={handleChange}
+          placeholder='What are we creating today?'
           value={values.body}
+          helperText={error && error.graphQLErrors[0].message}
         />
         <Button variant='contained' color='primary' type='submit'>
           Post

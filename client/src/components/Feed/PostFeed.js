@@ -12,7 +12,6 @@ import Avatar from '@material-ui/core/Avatar';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import ChatBubbleIcon from '@material-ui/icons/ChatBubble';
-import ShareIcon from '@material-ui/icons/Share';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import moment from 'moment';
@@ -84,11 +83,12 @@ export default function PostFeed({ data }) {
               </Typography>
             </CardContent>
             <CardActions disableSpacing>
-              <IconButton aria-label='add to favorites'>
-                <ChatBubbleIcon />
-              </IconButton>
-              <span>{post.commentCount}</span>
-
+              <Link to={`/feed/${post.id}`}>
+                <IconButton aria-label='add to favorites'>
+                  <ChatBubbleIcon />
+                </IconButton>
+                <span>{post.commentCount}</span>
+              </Link>
               <IconButton
                 className={clsx(classes.expand, {
                   [classes.expandOpen]: expanded
