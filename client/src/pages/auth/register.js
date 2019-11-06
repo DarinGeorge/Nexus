@@ -12,7 +12,6 @@ import Grid from '@material-ui/core/Grid';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
-import gql from 'graphql-tag';
 import { useMutation } from '@apollo/react-hooks';
 import { SnackbarProvider } from 'notistack';
 import { useForm } from '../../utils/hooks';
@@ -83,7 +82,7 @@ function Register() {
     errors
   } = useForm(registerUser, initialState);
 
-  const [addUser, { loading }] = useMutation(REGISTER_USER, {
+  const [addUser /*loading state: { loading }*/] = useMutation(REGISTER_USER, {
     update(
       _,
       {

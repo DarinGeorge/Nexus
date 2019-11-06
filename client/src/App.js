@@ -11,6 +11,7 @@ import Feed from './pages/feed';
 import Layout from './components/base/layout';
 import { AuthProvider } from './utils/context/auth';
 import { AuthRoute, ProtectedRoute } from './utils/helpers/routeTypes';
+import PostView from './components/Feed/PostView';
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
           <AuthRoute exact path='/auth/login' component={Login} />
           <AuthRoute exact path='/auth/register' component={Register} />
           <ProtectedRoute exact path='/feed' component={Feed} />
+          <ProtectedRoute exact path='/feed/:postId' component={PostView} />
         </Layout>
       </Router>
     </AuthProvider>

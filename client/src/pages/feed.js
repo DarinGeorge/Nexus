@@ -1,6 +1,7 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext } from 'react';
 import { useQuery } from '@apollo/react-hooks';
 import Grid from '@material-ui/core/Grid';
+import Paper from '@material-ui/core/Paper';
 import { makeStyles } from '@material-ui/core/styles';
 
 import { AuthContext } from '../utils/context/auth';
@@ -26,20 +27,26 @@ function Feed() {
     return (
       <>
         <div className={classes.root}>
+
           <Grid container>
             {user && (
-              <Grid item xs={8}>
+              <Grid item xs={12} sm={8} md={8} lg={6}>
                 <PostCreator />
+                <PostFeed loading={loading} data={data} />
               </Grid>
             )}
 
-            <Grid item xs={8}>
-              <PostFeed loading={loading} data={data} />
+            <Grid item xs={false} sm={4} lg={3}>
+              <Paper>Sidebar</Paper>
             </Grid>
-            <Grid item xs={4}>
-              <div>Sidebar</div>
+
+            <Grid item xs={false} lg={3}>
+              <div>Conversations</div>
+              <hr />
+              <div>Connections</div>
             </Grid>
           </Grid>
+
         </div>
       </>
     );

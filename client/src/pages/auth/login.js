@@ -75,7 +75,7 @@ function Login(props) {
     errors
   } = useForm(loginUser, initialState);
 
-  const [acceptUser, { loading }] = useMutation(LOGIN_USER, {
+  const [acceptUser /* loading state: { loading }*/] = useMutation(LOGIN_USER, {
     update(
       _,
       {

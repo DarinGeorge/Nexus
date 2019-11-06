@@ -14,15 +14,21 @@ const useStyles = makeStyles(theme => ({
 
 const theme = createMuiTheme({
   palette: {
+    /* REFERENCE:
+      #FFC726 - GOLD
+      #D1D2D8 - LIGHT GRAY
+      #ECEDF0 - BORDERS
+      #FBFBFC - HOVER COLOR
+    */
     primary: {
       //   light: '#757ce8',
-      main: '#ffd10d'
+      main: '#FFC726'
       //   dark: '#002884',
       //   contrastText: '#fff'
     },
     secondary: {
       //   light: '#ff7961',
-      main: '#000000'
+      main: '#D1D2D8'
       //   dark: '#ba000d',
       //   contrastText: '#000'
     }
@@ -32,10 +38,12 @@ const theme = createMuiTheme({
 export default function Layout({ children }) {
   const classes = useStyles();
   return (
-    <div className={classes.root}>
-      <Sidebar />
+    <>
       <CssBaseline />
-      <ThemeProvider theme={theme}>{children}</ThemeProvider>
-    </div>
+      <div className={classes.root}>
+        <Sidebar />
+        <ThemeProvider theme={theme}>{children}</ThemeProvider>
+      </div>
+    </>
   );
 }

@@ -17,3 +17,21 @@ export const FETCH_POSTS = gql`
     }
   }
 `;
+
+export const FETCH_POST = gql`
+  query($postId: ID!) {
+    post(postId: $postId) {
+      id
+      body
+      createdAt
+      alias
+      commentCount
+      comments {
+        id
+        alias
+        createdAt
+        body
+      }
+    }
+  }
+`;

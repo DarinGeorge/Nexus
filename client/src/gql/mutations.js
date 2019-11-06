@@ -35,3 +35,39 @@ export const REGISTER_USER = gql`
     }
   }
 `;
+
+export const DELETE_POST = gql`
+  mutation deletePost($postId: ID!) {
+    deletePost(postId: $postId)
+  }
+`;
+
+export const DELETE_COMMENT = gql`
+  mutation deleteComment($postId: ID!, $commentId: ID!) {
+    deleteComment(postId: $postId, commentId: $commentId) {
+      id
+      comments {
+        id
+        alias
+        body
+        createdAt
+      }
+      commentCount
+    }
+  }
+`;
+
+export const CREATE_COMMENT = gql`
+  mutation ($postId: ID!, $body: String!) {
+    createComment(postId: $postId, body: $body) {
+      id
+      comments {
+        id
+        alias
+        body
+        createdAt
+      }
+      commentCount
+    }
+  }
+`;

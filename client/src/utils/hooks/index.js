@@ -1,6 +1,8 @@
 import React from 'react';
 import { useSnackbar } from 'notistack';
 
+// Use Form Hook ---------------------------------
+
 export const useForm = (callback, initialState = {}) => {
   const [values, setValues] = React.useState(initialState);
   const [submitting, setSubmitting] = React.useState(false);
@@ -31,7 +33,7 @@ export const useForm = (callback, initialState = {}) => {
           };
 
           handleNotify('error');
-          setTimeout(function() {
+          setTimeout(function () {
             setErrors({});
           }, 5000);
         });
@@ -51,3 +53,5 @@ export const useForm = (callback, initialState = {}) => {
     setErrors
   };
 };
+
+// End Use Form Hook -----------------------------
