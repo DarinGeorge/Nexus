@@ -1,5 +1,7 @@
 import gql from 'graphql-tag';
 
+/* POST QUERIES ------------------------ */
+
 export const FETCH_POSTS = gql`
   {
     posts {
@@ -32,6 +34,30 @@ export const FETCH_POST = gql`
         createdAt
         body
       }
+    }
+  }
+`;
+
+/* USER QUERIES ------------------------ */
+
+export const FETCH_USERS = gql`
+{
+  users {
+    id
+    email
+    createdAt
+    alias
+  }
+}
+`;
+
+export const FETCH_USER = gql`
+  query($userId: ID!) {
+    user(userId: $userId) {
+      id
+      email
+      createdAt
+      alias
     }
   }
 `;

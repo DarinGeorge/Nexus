@@ -87,9 +87,11 @@ export default function PostCard({ post }) {
                     <CardHeader
                         className={classes.meta}
                         avatar={
-                            <Avatar aria-label='recipe' className={classes.avatar}>
-                                R
-                </Avatar>
+                            <Link to={`/creative/${user.id}`}>
+                                <Avatar aria-label='recipe' className={classes.avatar}>
+                                    R
+                            </Avatar>
+                            </Link>
                         }
                         action={
                             <>
@@ -119,7 +121,7 @@ export default function PostCard({ post }) {
                             </>
                         }
 
-                        title={post.alias}
+                        title={(<Link to={`/creative/${user.id}`}>{post.alias}</Link>)}
                         subheader={moment(post.createdAt).fromNow()}
                     />
                     <CardContent>
