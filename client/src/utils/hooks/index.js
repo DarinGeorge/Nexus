@@ -36,6 +36,7 @@ export const useForm = (callback, initialState = {}) => {
           setTimeout(function () {
             setErrors({});
           }, 5000);
+          return errors;
         });
       } else {
         setSubmitting(false);

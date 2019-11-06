@@ -6,6 +6,7 @@ import Home from './pages/home';
 import Login from './pages/auth/login';
 import Register from './pages/auth/register';
 import Feed from './pages/feed';
+import Profile from './pages/profile';
 
 // Components
 import Layout from './components/base/layout';
@@ -22,7 +23,8 @@ function App() {
           <AuthRoute exact path='/auth/login' component={Login} />
           <AuthRoute exact path='/auth/register' component={Register} />
           <ProtectedRoute exact path='/feed' component={Feed} />
-          <ProtectedRoute exact path='/feed/:postId' component={PostView} />
+          <Route path='/feed/:postId' component={PostView} />
+          <Route path='/creative/:userId' component={Profile} />
         </Layout>
       </Router>
     </AuthProvider>

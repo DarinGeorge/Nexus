@@ -22,10 +22,13 @@ const useStyles = makeStyles(theme => ({
     border: '2px solid #000',
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3)
+  },
+  danger: {
+    color: '#ff0000'
   }
 }));
 
-function DeleteButton({ postId, commentId, callback }) {
+function DeleteButton({ postId, commentId, callback, text }) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => {
@@ -43,8 +46,13 @@ function DeleteButton({ postId, commentId, callback }) {
       if (!commentId) {
         setOpen(false);
         const data = proxy.readQuery({ query: FETCH_POSTS });
-        data.posts = data.posts.filter(post => post.id !== postId);
-        proxy.writeQuery({ query: FETCH_POSTS, data });
+
+        if (data.posts) {
+          data.posts = data.posts.filter(post => post.id !== postId);
+          proxy.writeQuery({ query: FETCH_POSTS, data });
+        } else {
+          if (callback) callback()
+        }
       }
       if (callback) callback();
     },
@@ -55,9 +63,14 @@ function DeleteButton({ postId, commentId, callback }) {
   });
   return (
     <div>
-      <IconButton aria-label='settings' onClick={handleOpen}>
-        <DeleteIcon />
-      </IconButton>
+      {text ? (
+        <div className={classes.danger} onClick={handleOpen}>{text}</div>
+      ) : (
+          <IconButton aria-label='settings' onClick={handleOpen}>
+            <DeleteIcon />
+          </IconButton>
+        )}
+
       <Modal
         aria-labelledby='transition-modal-title'
         aria-describedby='transition-modal-description'

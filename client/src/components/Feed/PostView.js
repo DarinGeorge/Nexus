@@ -11,6 +11,8 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import classnames from 'classnames';
 import Container from '@material-ui/core/Container';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardMedia from '@material-ui/core/CardMedia';
@@ -25,6 +27,7 @@ import { FETCH_POST } from '../../gql/queries';
 import { AuthContext } from '../../utils/context/auth';
 import DeleteButton from './DeleteButton';
 import { CREATE_COMMENT } from '../../gql/mutations';
+import Comment from './Comment'
 
 const useStyles = makeStyles(theme => ({
   // card: {
@@ -63,6 +66,15 @@ function PostView() {
 
   const [expanded, setExpanded] = useState(false);
   const [comment, setComment] = useState('');
+  const [anchorEl, setAnchorEl] = React.useState(null);
+
+  const handleMenu = event => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
@@ -105,9 +117,31 @@ function PostView() {
             </Avatar>
               }
               action={
-                <IconButton>
-                  <MoreVertIcon />
-                </IconButton>
+                <>
+                  <IconButton onClick={handleMenu}>
+                    <MoreVertIcon />
+                  </IconButton>
+                  <Menu
+                    id="simple-menu"
+                    anchorEl={anchorEl}
+                    keepMounted
+                    open={Boolean(anchorEl)}
+                    onClose={handleClose}
+                  >
+                    <MenuItem onClick={handleClose}>Report</MenuItem>
+                    <hr />
+                    <MenuItem onClick={handleClose}>
+                      {user &&
+                        user.alias === alias && (
+                          <DeleteButton
+                            text='Delete'
+                            postId={id}
+                            callback={deletePostCallback}
+                          />
+                        )}
+                    </MenuItem>
+                  </Menu>
+                </>
               }
               title={alias}
               subheader={moment(createdAt).fromNow()}
@@ -189,28 +223,7 @@ function PostView() {
             </>
           )}
           {comments.map(comment => (
-            <Card key={comment.id}>
-              <CardHeader
-                avatar={
-                  <Avatar aria-label='Recipe' className={classes.avatar}>
-                    R
-            </Avatar>
-                }
-                action={
-                  <IconButton>
-                    <MoreVertIcon />
-                  </IconButton>
-                }
-                title={comment.alias}
-                subheader={moment(comment.createdAt).fromNow()}
-              />
-              <CardContent>
-                <Typography component='p'>{comment.body}</Typography>
-              </CardContent>
-              {user && user.alias === comment.alias && (
-                <DeleteButton postId={id} commentId={comment.id} />
-              )}
-            </Card>
+            <Comment key={comment.id} postId={id} user={user} comment={comment} />
           ))}
 
         </Container>
