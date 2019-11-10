@@ -92,8 +92,6 @@ export default function PostCard({ post }) {
                         avatar={
                             <Link to={{
                                 pathname: `/creative/${post.alias}`,
-                                // pass user id to profile page
-                                state: { linkUserId: post.user }
                             }}>
                                 <Avatar aria-label='recipe' className={classes.avatar}>
                                     R

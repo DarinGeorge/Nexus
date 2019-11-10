@@ -53,8 +53,8 @@ export const FETCH_USERS = gql`
 `;
 
 export const FETCH_USER = gql`
-  query($userId: ID!) {
-    user(userId: $userId) {
+  query($userId: ID, $alias: String) {
+    user(userId: $userId, alias: $alias) {
       id
       email
       createdAt

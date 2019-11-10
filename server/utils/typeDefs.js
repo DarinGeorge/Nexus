@@ -33,7 +33,7 @@ module.exports = gql`
     posts: [Post]
     post(postId: ID!): Post
     users: [User]
-    user(userId: ID!): User
+    user(userId: ID, alias: String): User
   }
   type Mutation {
     register(registerInput: RegisterInput): User!

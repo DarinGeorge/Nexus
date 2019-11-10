@@ -26,9 +26,9 @@ module.exports = {
         throw new Error(err);
       }
     },
-    async user(_, { userId }) {
+    async user(_, { userId, alias }) {
       try {
-        const user = await User.findById(userId);
+        const user = await User.findOne(alias ? { alias } : { userId });
         if (user) {
           return user;
         } else {

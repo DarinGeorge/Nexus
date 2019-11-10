@@ -1,12 +1,12 @@
 import React from 'react';
 import { useQuery } from '@apollo/react-hooks';
 import { makeStyles } from '@material-ui/core/styles';
-import { useLocation } from 'react-router-dom';
+import { useParams } from 'react-router-dom'
 import red from '@material-ui/core/colors/red';
 import moment from 'moment';
 
 import { FETCH_USER } from '../gql/queries';
-import { Avatar, Link } from '@material-ui/core';
+import { Avatar } from '@material-ui/core';
 
 const useStyles = makeStyles(theme => ({
     avatar: {
@@ -25,14 +25,11 @@ const useStyles = makeStyles(theme => ({
 
 export default function Profile() {
     const classes = useStyles();
-
-    // use 'userId' passed from <Link/> component state to get the user
-    let location = useLocation();
-    const userId = location.state.linkUserId
+    const { alias } = useParams();
 
     const { data } = useQuery(FETCH_USER, {
         variables: {
-            userId
+            alias
         }
     });
 
