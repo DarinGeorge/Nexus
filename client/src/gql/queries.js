@@ -7,6 +7,7 @@ export const FETCH_POSTS = gql`
     posts {
       id
       body
+      user
       createdAt
       alias
       commentCount

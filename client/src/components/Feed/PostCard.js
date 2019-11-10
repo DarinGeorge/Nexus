@@ -73,21 +73,28 @@ export default function PostCard({ post }) {
         history.push('/feed');
     }
 
+    console.log(post.user)
+
     return (
         <>
             <div className={classes.postCard}>
                 <Card className={classes.card}>
-                    <Link to={`/feed/${post.id}`}>
+                    <Link to={`/feed/post?=${post.id}`}>
                         <CardMedia
                             className={classes.media}
                             image='https://source.unsplash.com/random'
                         />
                     </Link>
 
+
                     <CardHeader
                         className={classes.meta}
                         avatar={
-                            <Link to={`/creative/${user.id}`}>
+                            <Link to={{
+                                pathname: `/creative/${post.alias}`,
+                                // pass user id to profile page
+                                state: { linkUserId: post.user }
+                            }}>
                                 <Avatar aria-label='recipe' className={classes.avatar}>
                                     R
                             </Avatar>
@@ -121,7 +128,15 @@ export default function PostCard({ post }) {
                             </>
                         }
 
-                        title={(<Link to={`/creative/${user.id}`}>{post.alias}</Link>)}
+                        title={(
+                            <Link to={{
+                                pathname: `/creative/${post.alias}`,
+                                // pass user id to profile page
+                                state: { linkUserId: post.user }
+                            }}>
+                                {post.alias}
+                            </Link>
+                        )}
                         subheader={moment(post.createdAt).fromNow()}
                     />
                     <CardContent>

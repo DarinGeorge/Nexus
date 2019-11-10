@@ -38,6 +38,8 @@ function Feed() {
   const { loading, data } = useQuery(FETCH_POSTS);
   const { user } = useContext(AuthContext);
 
+  console.log(data)
+
   if (!loading)
     return (
       <>
