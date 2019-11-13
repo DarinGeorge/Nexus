@@ -1,4 +1,4 @@
-const { gql } = require('apollo-server');
+const { gql } = require("apollo-server");
 
 module.exports = gql`
   type Post {
@@ -21,7 +21,24 @@ module.exports = gql`
     email: String!
     token: String!
     alias: String!
+    chats: [Chat!]!
     createdAt: String!
+  }
+  type Chat {
+    id: ID!
+    title: String
+    users: [User!]!
+    messages: [Message!]!
+    lastMessage: Message
+    createdAt: String!
+    updatedAt: String!
+  }
+  type Message {
+    id: ID!
+    body: String!
+    sender: User!
+    createdAt: String!
+    updatedAt: String!
   }
   input RegisterInput {
     alias: String!
@@ -42,5 +59,8 @@ module.exports = gql`
     deletePost(postId: ID!): String!
     createComment(postId: ID!, body: String!): Post!
     deleteComment(postId: ID!, commentId: ID!): Post!
+
+    startChat(title: String, userIds: [ID!]!): Chat
+    createMessage(chatId: ID!, body: String!): Message
   }
 `;

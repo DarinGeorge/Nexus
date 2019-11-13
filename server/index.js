@@ -18,5 +18,5 @@ mongoose
     return server.listen({ port: 5000 });
   })
   .then(res => {
-    console.log(`Server UI available at ${res.url}`);
+    console.log(`🚀 Server UI available at ${res.url}`);
   });

@@ -1,6 +1,6 @@
-const Post = require('../../models/Post');
-const authorizer = require('../authorizer');
-const { AuthenticationError } = require('apollo-server');
+const Post = require("../../models/Post");
+const authorizer = require("../authorizer");
+const { AuthenticationError } = require("apollo-server");
 
 module.exports = {
   Query: {
@@ -18,7 +18,7 @@ module.exports = {
         if (post) {
           return post;
         } else {
-          throw new Error('Post not found');
+          throw new Error("Post not found");
         }
       } catch (err) {
         throw new Error(err);
@@ -29,8 +29,8 @@ module.exports = {
     async createPost(_, { body }, context) {
       const user = authorizer(context);
 
-      if (body.trim() === '') {
-        throw new Error('Post body must not be empty');
+      if (body.trim() === "") {
+        throw new Error("Post body must not be empty");
       }
 
       const newPost = new Post({
@@ -50,9 +50,9 @@ module.exports = {
         const post = await Post.findById(postId);
         if (user.alias === post.alias) {
           await post.delete();
-          return 'Post deleted successfully.';
+          return "Post deleted successfully.";
         } else {
-          throw new AuthenticationError('Action not allowed.');
+          throw new AuthenticationError("Action not allowed.");
         }
       } catch (err) {
         throw new Error(err);

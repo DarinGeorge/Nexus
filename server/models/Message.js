@@ -1,0 +1,20 @@
+const { model, Schema } = require("mongoose");
+
+const MessageSchema = new Schema(
+  {
+    body: String,
+    sender: {
+      type: Schema.Types.ObjectId,
+      ref: "User"
+    },
+    chat: {
+      type: Schema.Types.ObjectId,
+      ref: "Chat"
+    }
+  },
+  {
+    timestamps: true
+  }
+);
+
+module.exports = model("Message", MessageSchema);
