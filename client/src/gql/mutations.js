@@ -71,3 +71,30 @@ export const CREATE_COMMENT = gql`
     }
   }
 `;
+
+export const CREATE_MESSAGE = gql`
+  mutation ($chatId: ID!, $body: String!) {
+    createMessage(chatId: $chatId, body: $body) {
+      id
+      body
+      sender {
+        id
+        email
+        alias
+      }
+      createdAt
+    }
+  }
+`;
+
+export const CREATE_CHAT = gql`
+  mutation ($title: String, $sendTo: ID!) {
+    startChat(title: $title, userIds: [$sendTo]) {
+      id
+      title
+      users
+      messages
+      lastMessage
+    }
+  }
+`;

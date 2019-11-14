@@ -59,6 +59,24 @@ export const FETCH_USER = gql`
       email
       createdAt
       alias
+      chats {
+        id
+        title
+        messages {
+          id
+          body
+        }
+      }
+    }
+  }
+`;
+
+export const FETCH_MESSAGES = gql`
+  query($chatId: ID) {
+    messages(chatId: $chatId) {
+      id
+      body
+      sender
     }
   }
 `;

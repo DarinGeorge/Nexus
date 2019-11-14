@@ -47,6 +47,7 @@ module.exports = gql`
     email: String!
   }
   type Query {
+    messages(chatId: ID!): [Message]!
     posts: [Post]
     post(postId: ID!): Post
     users: [User]
