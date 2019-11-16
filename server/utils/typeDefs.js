@@ -1,4 +1,4 @@
-const { gql } = require("apollo-server");
+const { gql } = require('apollo-server');
 
 module.exports = gql`
   type Post {
@@ -63,5 +63,8 @@ module.exports = gql`
 
     startChat(title: String, userIds: [ID!]!): Chat
     createMessage(chatId: ID!, body: String!): Message
+  }
+  type Subscription {
+    newMessage(chatId: ID!): Message!
   }
 `;
