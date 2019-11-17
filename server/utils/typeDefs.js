@@ -21,14 +21,14 @@ module.exports = gql`
     email: String!
     token: String!
     alias: String!
-    chats: [Chat!]!
+    chats(limit: Int): [Chat!]!
     createdAt: String!
   }
   type Chat {
     id: ID!
     title: String
     users: [User!]!
-    messages: [Message!]!
+    messages(limit: Int): [Message!]!
     lastMessage: Message
     createdAt: String!
     updatedAt: String!
@@ -47,11 +47,12 @@ module.exports = gql`
     email: String!
   }
   type Query {
-    messages(chatId: ID!): [Message]!
+    messages(chatId: ID!, limit: Int): [Message!]
     posts: [Post]
     post(postId: ID!): Post
     users: [User]
     user(userId: ID, alias: String): User
+    chats(userId: ID!, limit: Int): [Chat!]
   }
   type Mutation {
     register(registerInput: RegisterInput): User!

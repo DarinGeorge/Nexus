@@ -19,7 +19,9 @@ module.exports = {
   },
   Query: {
     ...postsResolvers.Query,
-    ...usersResolvers.Query
+    ...usersResolvers.Query,
+    ...messagesResolvers.Query,
+    ...chatsResolvers.Query
   },
   Mutation: {
     ...usersResolvers.Mutation,

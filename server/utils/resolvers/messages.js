@@ -1,16 +1,26 @@
 const Chat = require('../../models/Chat');
 const User = require('../../models/User');
-// const { UserInputError } = require("apollo-server");
+const { UserInputError } = require('apollo-server');
 const authorizer = require('../authorizer');
 const Message = require('../../models/Message');
 const { withFilter, PubSub } = require('apollo-server');
 
-const NEW_MESSAGE = 'NEW_MESSAGE';
-
 const pubsub = new PubSub();
 
+const NEW_MESSAGE = 'NEW_MESSAGE';
+
 module.exports = {
-  Query: {},
+  Query: {
+    async messages(_, args, context, info) {
+      const messages = await Message.find({ chat: args.chatId });
+
+      const limitedMessages = messages.slice(0, args.limit);
+
+      if (args.limit) return limitedMessages;
+
+      return messages;
+    }
+  },
   Mutation: {
     async createMessage(root, { chatId, body }, context, info) {
       const user = authorizer(context); // returns user object that is logged in

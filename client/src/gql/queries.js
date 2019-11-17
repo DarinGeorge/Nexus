@@ -42,14 +42,14 @@ export const FETCH_POST = gql`
 /* USER QUERIES ------------------------ */
 
 export const FETCH_USERS = gql`
-{
-  users {
-    id
-    email
-    createdAt
-    alias
+  {
+    users {
+      id
+      email
+      createdAt
+      alias
+    }
   }
-}
 `;
 
 export const FETCH_USER = gql`
@@ -72,11 +72,33 @@ export const FETCH_USER = gql`
 `;
 
 export const FETCH_MESSAGES = gql`
-  query($chatId: ID) {
-    messages(chatId: $chatId) {
+  query($chatId: ID!, $limit: Int) {
+    messages(chatId: $chatId, limit: $limit) {
       id
       body
-      sender
+      sender {
+        alias
+      }
+      createdAt
+    }
+  }
+`;
+
+export const FETCH_CHATS = gql`
+  query($userId: ID!, $limit: Int) {
+    chats(userId: $userId, limit: $limit) {
+      id
+      title
+      users {
+        alias
+      }
+      messages {
+        body
+        sender {
+          alias
+        }
+      }
+      createdAt
     }
   }
 `;

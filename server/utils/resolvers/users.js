@@ -1,9 +1,9 @@
-const User = require("../../models/User");
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const { validateRegisterInput, validateLoginInput } = require("../validators");
-const { SECRET_KEY } = require("../../env");
-const { UserInputError } = require("apollo-server");
+const User = require('../../models/User');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const { validateRegisterInput, validateLoginInput } = require('../validators');
+const { SECRET_KEY } = require('../../env');
+const { UserInputError } = require('apollo-server');
 
 function generateToken(user) {
   return jwt.sign(
@@ -13,7 +13,7 @@ function generateToken(user) {
       alias: user.alias
     },
     SECRET_KEY,
-    { expiresIn: "7d" }
+    { expiresIn: '7d' }
   );
 }
 module.exports = {
@@ -32,7 +32,7 @@ module.exports = {
         if (user) {
           return user;
         } else {
-          throw new Error("User not found.");
+          throw new Error('User not found.');
         }
       } catch (err) {
         throw new Error(err);
@@ -44,22 +44,22 @@ module.exports = {
       const { errors, valid } = validateLoginInput(alias, password);
 
       if (!valid) {
-        throw new UserInputError("Errors", { errors });
+        throw new UserInputError('Errors', { errors });
       }
 
       const user = await User.findOne({ alias });
 
       if (!user) {
-        errors.general = "User not found";
-        throw new UserInputError("User not found.", {
+        errors.general = 'User not found';
+        throw new UserInputError('User not found.', {
           errors
         });
       }
 
       const match = await bcrypt.compare(password, user.password);
       if (!match) {
-        errors.general = "Incorrect Credentials.";
-        throw new UserInputError("Incorrect Credentials.", {
+        errors.general = 'Incorrect Credentials.';
+        throw new UserInputError('Incorrect Credentials.', {
           errors
         });
       }
@@ -74,9 +74,7 @@ module.exports = {
     },
     async register(
       _,
-      {
-        registerInput: { alias, email, password, confirmPassword }
-      },
+      { registerInput: { alias, email, password, confirmPassword } },
       context,
       info
     ) {
@@ -88,15 +86,15 @@ module.exports = {
         confirmPassword
       );
       if (!valid) {
-        throw new UserInputError("Errors", { errors });
+        throw new UserInputError('Errors', { errors });
       }
       // Check if user exists
       const user = await User.findOne({ alias, email });
       if (user) {
-        throw new UserInputError("Username or Email is taken.", {
+        throw new UserInputError('Username or Email is taken.', {
           errors: {
-            alias: "This alias is taken.",
-            email: "This email is in use. Log in instead."
+            alias: 'This alias is taken.',
+            email: 'This email is in use. Log in instead.'
           }
         });
       }
@@ -124,7 +122,7 @@ module.exports = {
   },
   User: {
     async chats(user, args, context, info) {
-      return (await user.populate("chats").execPopulate()).chats;
+      return (await user.populate('chats').execPopulate()).chats;
     }
   }
 };
