@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { TextField } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
-import { useQuery } from '@apollo/react-hooks';
+import { useQuery, useSubscription } from '@apollo/react-hooks';
 import { FETCH_MESSAGES } from '../../gql/queries';
 import { MESSAGE_SUBSCRIPTION } from '../../gql/subscriptions';
 
@@ -25,7 +25,7 @@ function Chat({ currentlyOpenChats, values, handleChange, handleSubmit }) {
         };
       }
     });
-  }, [subscribeToMore, currentlyOpenChats]);
+  }, [subscribeToMore, currentlyOpenChats.id]);
 
   if (loading) return <p>...Loading</p>;
 

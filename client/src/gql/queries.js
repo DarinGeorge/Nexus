@@ -77,6 +77,7 @@ export const FETCH_MESSAGES = gql`
       id
       body
       sender {
+        id
         alias
       }
       createdAt
@@ -93,8 +94,10 @@ export const FETCH_CHATS = gql`
         alias
       }
       messages {
+        id
         body
         sender {
+          id
           alias
         }
       }
