@@ -6,6 +6,7 @@ import { AuthContext } from '../utils/context/auth';
 import { useQuery, useMutation } from '@apollo/react-hooks';
 import { FETCH_USER, FETCH_CHATS } from '../gql/queries';
 import { CREATE_MESSAGE } from '../gql/mutations';
+import Chat from '../components/Messages/Chat';
 
 export default function Messages() {
   const { user } = useContext(AuthContext);
@@ -17,12 +18,15 @@ export default function Messages() {
     }
   });
 
-  const [currentlyOpenChats, setCurrentlyOpenChats] = useState('');
+  const [currentlyOpenChats, setCurrentlyOpenChats] = useState({
+    id: '',
+    title: ''
+  });
   const [values, setValues] = useState('');
 
   const [createMessage] = useMutation(CREATE_MESSAGE, {
     variables: {
-      chatId: currentlyOpenChats,
+      chatId: currentlyOpenChats.id,
       body: values
     }
   });
@@ -45,10 +49,14 @@ export default function Messages() {
           <Grid item xs={3}>
             <h1>Conversations</h1>
 
-            {data.chats.map(chat => (
-              <ul key={chat.id}>
+            {data.chats.map((chat, index) => (
+              <ul key={index}>
                 <li>
-                  <button onClick={() => setCurrentlyOpenChats(chat.id)}>
+                  <button
+                    onClick={() =>
+                      setCurrentlyOpenChats({ id: chat.id, title: chat.title })
+                    }
+                  >
                     {chat.title}
                   </button>
                 </li>
@@ -57,42 +65,12 @@ export default function Messages() {
           </Grid>
 
           <Grid item xs={9}>
-            {data.chats.map(chat => (
-              <div key={chat.id}>
-                {currentlyOpenChats.includes(chat.id) && (
-                  <>
-                    <h1>{chat.title}</h1>
-                    <ul style={{ margin: 0, padding: 0 }}>
-                      {chat.messages.map(message => (
-                        <li
-                          key={message.id}
-                          style={{
-                            listStyle: 'none',
-                            backgroundColor: '#ccc',
-                            maxWidth: '200px',
-                            margin: '15px 0'
-                          }}
-                        >
-                          {message.body}
-                        </li>
-                      ))}
-                    </ul>
-                    <TextField
-                      onChange={handleChange}
-                      value={values}
-                      variant='outlined'
-                    />
-                    <Button
-                      variant='contained'
-                      color='primary'
-                      onClick={handleSubmit}
-                    >
-                      Send
-                    </Button>
-                  </>
-                )}
-              </div>
-            ))}
+            <Chat
+              handleChange={handleChange}
+              handleSubmit={handleSubmit}
+              values={values}
+              currentlyOpenChats={currentlyOpenChats}
+            />
           </Grid>
         </Grid>
       </>

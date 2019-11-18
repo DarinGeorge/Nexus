@@ -58,7 +58,7 @@ export const DELETE_COMMENT = gql`
 `;
 
 export const CREATE_COMMENT = gql`
-  mutation ($postId: ID!, $body: String!) {
+  mutation($postId: ID!, $body: String!) {
     createComment(postId: $postId, body: $body) {
       id
       comments {
@@ -73,7 +73,7 @@ export const CREATE_COMMENT = gql`
 `;
 
 export const CREATE_MESSAGE = gql`
-  mutation ($chatId: ID!, $body: String!) {
+  mutation($chatId: ID!, $body: String!) {
     createMessage(chatId: $chatId, body: $body) {
       id
       body
@@ -88,7 +88,7 @@ export const CREATE_MESSAGE = gql`
 `;
 
 export const CREATE_CHAT = gql`
-  mutation ($title: String, $sendTo: ID!) {
+  mutation($title: String, $sendTo: ID!) {
     startChat(title: $title, userIds: [$sendTo]) {
       id
       title

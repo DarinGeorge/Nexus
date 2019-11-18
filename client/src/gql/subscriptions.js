@@ -9,6 +9,7 @@ export const MESSAGE_SUBSCRIPTION = gql`
         id
         alias
       }
+      createdAt
     }
   }
 `;
