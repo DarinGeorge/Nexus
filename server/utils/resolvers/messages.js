@@ -28,7 +28,8 @@ module.exports = {
       const message = await Message.create({
         body,
         sender: user.id, // tries to set the user object returned from authorizer to sender
-        chat: chatId
+        chat: chatId,
+        createdAt: new Date().toISOString()
       });
 
       pubsub.publish(NEW_MESSAGE, {

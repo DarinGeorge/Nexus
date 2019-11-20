@@ -93,7 +93,7 @@ export const FETCH_CHATS = gql`
       users {
         alias
       }
-      messages {
+      messages(limit: 1) {
         id
         body
         sender {

@@ -31,7 +31,11 @@ module.exports = {
 
       userIds.push(user.id);
 
-      const chat = await Chat.create({ title, users: userIds });
+      const chat = await Chat.create({
+        title,
+        users: userIds,
+        createdAt: new Date().toISOString()
+      });
 
       await User.updateMany(
         { _id: { $in: userIds } },
