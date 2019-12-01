@@ -57,6 +57,12 @@ export const DELETE_COMMENT = gql`
   }
 `;
 
+export const DELETE_CHAT = gql`
+  mutation deleteChat($userId: ID!, $chatId: ID!) {
+    deleteChat(userId: $userId, chatId: $chatId)
+  }
+`;
+
 export const CREATE_COMMENT = gql`
   mutation($postId: ID!, $body: String!) {
     createComment(postId: $postId, body: $body) {
@@ -92,9 +98,10 @@ export const CREATE_CHAT = gql`
     startChat(title: $title, userIds: [$sendTo]) {
       id
       title
-      users
-      messages
-      lastMessage
+      users {
+        id
+        alias
+      }
     }
   }
 `;

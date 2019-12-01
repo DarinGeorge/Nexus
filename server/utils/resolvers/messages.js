@@ -3,9 +3,8 @@ const User = require('../../models/User');
 const { UserInputError } = require('apollo-server');
 const authorizer = require('../authorizer');
 const Message = require('../../models/Message');
-const { withFilter, PubSub } = require('apollo-server');
-
-const pubsub = new PubSub();
+const { withFilter } = require('apollo-server');
+const pubsub = require('../pubsub')
 
 const NEW_MESSAGE = 'NEW_MESSAGE';
 
@@ -14,7 +13,7 @@ module.exports = {
     async messages(_, args, context, info) {
       const messages = await Message.find({ chat: args.chatId });
 
-      const limitedMessages = messages.slice(0, args.limit);
+      const limitedMessages = messages.slice(-1);
 
       if (args.limit) return limitedMessages;
 

@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { ThemeProvider } from '@material-ui/core/styles';
 import { makeStyles } from '@material-ui/core/styles';
 import { createMuiTheme } from '@material-ui/core/styles';
-
 import Sidebar from './deps/sidebar';
+import { AuthContext } from '../../utils/context/auth';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -35,13 +35,14 @@ const theme = createMuiTheme({
   }
 });
 
-export default function Layout({ children }) {
+export default function Layout({ children }, params) {
+  const { user } = useContext(AuthContext)
   const classes = useStyles();
   return (
     <>
       <CssBaseline />
       <div className={classes.root}>
-        <Sidebar />
+        {user ? (<Sidebar />) : null}
         <ThemeProvider theme={theme}>{children}</ThemeProvider>
       </div>
     </>

@@ -67,5 +67,6 @@ module.exports = gql`
   }
   type Subscription {
     newMessage(chatId: ID!): Message!
+    newChat(userId: ID!): Chat!
   }
 `;

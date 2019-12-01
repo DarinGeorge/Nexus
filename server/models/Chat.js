@@ -9,16 +9,12 @@ const ChatSchema = new Schema({
       ref: 'User'
     }
   ],
-  lastMessage: {
-    type: Schema.Types.ObjectId,
-    ref: 'Message'
-  },
   createdAt: String
 });
 
 const USER_LIMIT = 5;
 
-ChatSchema.pre('save', async function() {
+ChatSchema.pre('save', async function () {
   if (!this.title) {
     const users = await User.where('_id')
       .in(this.users)

@@ -13,3 +13,19 @@ export const MESSAGE_SUBSCRIPTION = gql`
     }
   }
 `;
+
+export const CHAT_SUBSCRIPTION = gql`
+  subscription($userId: ID!) {
+    newChat(userId: $userId) {
+      id
+      title
+      users {
+        alias
+      }
+      messages {
+        id
+      }
+      createdAt
+    }
+  }
+`;

@@ -140,13 +140,13 @@ function Sidebar(props) {
               </IconButton>
             </>
           ) : (
-            <IconButton onClick={handleDrawerOpen}>
-              <FiberManualRecordIcon
-                style={{ fontSize: '10px' }}
-                fontSize='inherit'
-              />
-            </IconButton>
-          )}
+              <IconButton onClick={handleDrawerOpen}>
+                <FiberManualRecordIcon
+                  style={{ fontSize: '10px' }}
+                  fontSize='inherit'
+                />
+              </IconButton>
+            )}
         </div>
 
         {user ? (
@@ -177,18 +177,20 @@ function Sidebar(props) {
                 </ListItemIcon>
                 <ListItemText>Apps</ListItemText>
               </ListItem>
-              <ListItem button>
-                <ListItemIcon
-                  color='inherit'
-                  aria-label='open drawer'
-                  edge='start'
-                >
-                  <ForumIcon
-                    className={clsx(classes.menuButton, isActive('/messages'))}
-                  />
-                </ListItemIcon>
-                <ListItemText>Messages</ListItemText>
-              </ListItem>
+              <Link to='/messages'>
+                <ListItem button>
+                  <ListItemIcon
+                    color='inherit'
+                    aria-label='open drawer'
+                    edge='start'
+                  >
+                    <ForumIcon
+                      className={clsx(classes.menuButton, isActive('/messages'))}
+                    />
+                  </ListItemIcon>
+                  <ListItemText>Messages</ListItemText>
+                </ListItem>
+              </Link>
               <ListItem button>
                 <ListItemIcon
                   color='inherit'
@@ -231,36 +233,36 @@ function Sidebar(props) {
             </List>
           </>
         ) : (
-          <>
-            <List>
-              <ListItem button>
-                <Link to='/auth/register' className={classes.aLinks}>
-                  <ListItemIcon
-                    color='inherit'
-                    aria-label='Sign Up'
-                    edge='start'
-                    className={classes.menuButton}
-                  >
-                    <GroupIcon />
-                  </ListItemIcon>
-                  <ListItemText>Sign Up</ListItemText>
-                </Link>
-              </ListItem>
-              <ListItem button>
-                <Link to='/auth/login' className={classes.aLinks}>
-                  <ListItemIcon
-                    color='inherit'
-                    edge='start'
-                    className={classes.menuButton}
-                  >
-                    <GroupIcon />
-                  </ListItemIcon>
-                  <ListItemText>Login</ListItemText>
-                </Link>
-              </ListItem>
-            </List>
-          </>
-        )}
+            <>
+              <List>
+                <ListItem button>
+                  <Link to='/auth/register' className={classes.aLinks}>
+                    <ListItemIcon
+                      color='inherit'
+                      aria-label='Sign Up'
+                      edge='start'
+                      className={classes.menuButton}
+                    >
+                      <GroupIcon />
+                    </ListItemIcon>
+                    <ListItemText>Sign Up</ListItemText>
+                  </Link>
+                </ListItem>
+                <ListItem button>
+                  <Link to='/auth/login' className={classes.aLinks}>
+                    <ListItemIcon
+                      color='inherit'
+                      edge='start'
+                      className={classes.menuButton}
+                    >
+                      <GroupIcon />
+                    </ListItemIcon>
+                    <ListItemText>Login</ListItemText>
+                  </Link>
+                </ListItem>
+              </List>
+            </>
+          )}
       </Drawer>
     </>
   );

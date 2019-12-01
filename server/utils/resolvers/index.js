@@ -31,6 +31,7 @@ module.exports = {
     ...messagesResolvers.Mutation
   },
   Subscription: {
-    ...messagesResolvers.Subscription
+    ...messagesResolvers.Subscription,
+    ...chatsResolvers.Subscription
   }
 };

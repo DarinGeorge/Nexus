@@ -11,7 +11,9 @@ function Chat({
   currentlyOpenChats,
   values,
   handleChange,
-  handleSubmit
+  handleSubmit,
+  submitChat,
+  handleKeyUp
 }) {
   const { data, loading, subscribeToMore } = useQuery(FETCH_MESSAGES, {
     variables: {
@@ -26,10 +28,17 @@ function Chat({
       updateQuery: (prev, { subscriptionData }) => {
         if (!subscriptionData.data) return prev;
         const newMessage = subscriptionData.data.newMessage;
+        if (prev.messages.find(message => message.id === newMessage.id)) {
+          console.log('message found! no message added.')
+          return prev;
+        } else {
+          console.log('message not found: generating message.')
 
-        return {
-          messages: [...prev.messages, newMessage]
-        };
+          return {
+
+            messages: [...prev.messages, newMessage]
+          }
+        }
       }
     });
   }, [subscribeToMore, currentlyOpenChats.id]);
@@ -56,6 +65,7 @@ function Chat({
             >
               {currentlyOpenChats.title}
             </div>
+
             <ul
               style={{
                 margin: 0,
@@ -64,20 +74,20 @@ function Chat({
                 overflowY: 'scroll'
               }}
             >
-              {data.messages.map((message, index) => (
+              {currentlyOpenChats.new === false ? data.messages.map((message, index) => (
                 <li
                   style={
                     message.sender.id === user.id
                       ? {
-                          listStyle: 'none',
-                          maxWidth: '200px',
-                          margin: '15px 0 5px auto'
-                        }
+                        listStyle: 'none',
+                        maxWidth: '200px',
+                        margin: '15px 0 5px auto'
+                      }
                       : {
-                          listStyle: 'none',
-                          maxWidth: '200px',
-                          margin: '15px 0 5px'
-                        }
+                        listStyle: 'none',
+                        maxWidth: '200px',
+                        margin: '15px 0 5px'
+                      }
                   }
                   key={index}
                 >
@@ -85,19 +95,19 @@ function Chat({
                     style={
                       message.sender.id === user.id
                         ? {
-                            backgroundColor: '#ffd10d',
-                            maxWidth: '500px',
-                            borderRadius: '10px 10px 0 10px',
-                            padding: 10,
-                            margin: 0
-                          }
+                          backgroundColor: '#ffd10d',
+                          maxWidth: '500px',
+                          borderRadius: '10px 10px 0 10px',
+                          padding: 10,
+                          margin: 0
+                        }
                         : {
-                            backgroundColor: '#ccc',
-                            maxWidth: '500px',
-                            borderRadius: '10px 10px 10px 0',
-                            padding: 10,
-                            margin: 0
-                          }
+                          backgroundColor: '#ccc',
+                          maxWidth: '500px',
+                          borderRadius: '10px 10px 10px 0',
+                          padding: 10,
+                          margin: 0
+                        }
                     }
                   >
                     {message.body}
@@ -112,7 +122,9 @@ function Chat({
                     {moment(message.createdAt).fromNow()}
                   </span>
                 </li>
-              ))}
+              )) : (
+                  <div>Write your message below to begin or resume your conversation.</div>
+                )}
             </ul>
             <div
               style={{
@@ -128,11 +140,13 @@ function Chat({
                 value={values}
                 variant='outlined'
                 style={{ width: '85%' }}
+                onKeyUp={handleKeyUp}
               />
               <Button
                 disabled={isDisabled}
                 style={{ color: '#000' }}
-                onClick={handleSubmit}
+                onClick={currentlyOpenChats.id === 'temp-chat' ? submitChat : handleSubmit}
+
               >
                 Send
               </Button>

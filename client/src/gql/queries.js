@@ -100,6 +100,7 @@ export const FETCH_CHATS = gql`
           id
           alias
         }
+        createdAt
       }
       createdAt
     }

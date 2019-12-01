@@ -47,6 +47,8 @@ const client = new ApolloClient({
   link
 });
 
+export { client }
+
 export default (
   <ApolloProvider client={client}>
     <App />

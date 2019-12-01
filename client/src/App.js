@@ -24,8 +24,9 @@ function App() {
           <AuthRoute exact path='/auth/login' component={Login} />
           <AuthRoute exact path='/auth/register' component={Register} />
           <ProtectedRoute exact path='/messages' component={Messages} />
+          <ProtectedRoute exact path='/messages/:id' component={Messages} />
           <ProtectedRoute exact path='/feed' component={Feed} />
-          <Route path='/feed/post?=:postId' component={PostView} />
+          <Route path='/feed/:postId' component={PostView} />
           <Route path='/creative/:alias' component={Profile} />
         </Layout>
       </Router>

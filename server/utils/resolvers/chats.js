@@ -1,12 +1,15 @@
 const Chat = require('../../models/Chat');
 const User = require('../../models/User');
 const Message = require('../../models/Message');
-const { UserInputError } = require('apollo-server');
+const { withFilter } = require('apollo-server');
 const authorizer = require('../authorizer');
+const pubsub = require('../pubsub')
+
+const NEW_CHAT = 'NEW_CHAT'
 
 module.exports = {
   Query: {
-    async chats(_, args, context, info) {
+    async chats(_, args) {
       const chats = await Chat.find({ users: args.userId });
 
       const limitedChats = chats.slice(0, args.limit);
@@ -17,24 +20,26 @@ module.exports = {
     }
   },
   Mutation: {
-    async startChat(root, args, context, info) {
+    async startChat(_, args, context) {
       const user = authorizer(context);
       const { title, userIds } = args;
 
-      // const idsFound = await User.where("_id")
-      //   .in(userIds)
-      //   .countDocuments();
-
-      // if (idsFound !== userIds.length) {
-      //   throw new UserInputError("One or more users are invalid");
-      // }
-
       userIds.push(user.id);
+
+      const foundChats = await Chat.find({ users: userIds });
+      const existingChat = foundChats[0];
+
+      if (userIds.length === 2 && foundChats.length > 0) return existingChat;
 
       const chat = await Chat.create({
         title,
         users: userIds,
         createdAt: new Date().toISOString()
+      });
+
+      pubsub.publish(NEW_CHAT, {
+        newChat: chat,
+        userId: userIds[1]
       });
 
       await User.updateMany(
@@ -48,15 +53,33 @@ module.exports = {
       return chat;
     }
   },
+  Subscription: {
+    newChat: {
+      // Additional event labels can be passed to asyncIterator creation
+      subscribe: withFilter(
+        () => pubsub.asyncIterator(NEW_CHAT),
+        (payload, args) => {
+          return payload.userId === args.userId;
+        }
+      )
+    }
+  },
   Chat: {
-    messages(chat, args, context, info) {
-      return Message.find({ chat: chat.id });
+    async messages(chat, args) {
+      const messages = await Message.find({ chat: chat.id });
+
+      const limitedMessages = messages.slice(-1);
+
+      if (args.limit) return limitedMessages;
+
+      return messages;
     },
-    async users(chat, args, context, info) {
+    async users(chat) {
       return (await chat.populate('users').execPopulate()).users;
     },
-    async lastMessage(chat, args, context, info) {
+    async lastMessage(chat) {
       return (await chat.populate('lastMessage').execPopulate()).lastMessage;
+
     }
   }
 };
