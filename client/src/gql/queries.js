@@ -80,6 +80,7 @@ export const FETCH_MESSAGES = gql`
         id
         alias
       }
+      chat
       createdAt
     }
   }

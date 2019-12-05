@@ -1,7 +1,7 @@
 import gql from 'graphql-tag';
 
 export const MESSAGE_SUBSCRIPTION = gql`
-  subscription($chatId: ID!) {
+  subscription($chatId: ID) {
     newMessage(chatId: $chatId) {
       id
       body
@@ -9,6 +9,7 @@ export const MESSAGE_SUBSCRIPTION = gql`
         id
         alias
       }
+      chat
       createdAt
     }
   }

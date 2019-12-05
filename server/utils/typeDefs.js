@@ -37,6 +37,7 @@ module.exports = gql`
     id: ID!
     body: String!
     sender: User!
+    chat: ID!
     createdAt: String!
     updatedAt: String!
   }
@@ -66,7 +67,7 @@ module.exports = gql`
     createMessage(chatId: ID!, body: String!): Message
   }
   type Subscription {
-    newMessage(chatId: ID!): Message!
+    newMessage(chatId: ID, userId: ID): Message!
     newChat(userId: ID!): Chat!
   }
 `;

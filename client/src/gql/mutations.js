@@ -88,6 +88,7 @@ export const CREATE_MESSAGE = gql`
         email
         alias
       }
+      chat
       createdAt
     }
   }

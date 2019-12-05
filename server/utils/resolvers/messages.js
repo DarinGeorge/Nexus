@@ -6,16 +6,22 @@ const Message = require('../../models/Message');
 const { withFilter } = require('apollo-server');
 const pubsub = require('../pubsub')
 
-const NEW_MESSAGE = 'NEW_MESSAGE';
+const NEW_TEST_MESSAGE = 'NEW_TEST_MESSAGE';
 
 module.exports = {
   Query: {
     async messages(_, args, context, info) {
-      const messages = await Message.find({ chat: args.chatId });
+      const messages = await Message.find();
 
-      const limitedMessages = messages.slice(-1);
+      if (args.chatId) {
+        const messages = await Message.find({ chat: args.chatId });
 
-      if (args.limit) return limitedMessages;
+        const limitedMessages = messages.slice(-1);
+
+        if (args.limit) return limitedMessages;
+
+        return messages;
+      }
 
       return messages;
     }
@@ -31,7 +37,7 @@ module.exports = {
         createdAt: new Date().toISOString()
       });
 
-      pubsub.publish(NEW_MESSAGE, {
+      pubsub.publish(NEW_TEST_MESSAGE, {
         newMessage: message,
         chatId: chatId
       });
@@ -51,7 +57,7 @@ module.exports = {
     newMessage: {
       // Additional event labels can be passed to asyncIterator creation
       subscribe: withFilter(
-        () => pubsub.asyncIterator(NEW_MESSAGE),
+        () => pubsub.asyncIterator(NEW_TEST_MESSAGE),
         (payload, args) => {
           return payload.chatId === args.chatId;
         }
