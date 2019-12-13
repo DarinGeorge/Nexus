@@ -3,11 +3,11 @@ import { useSubscription } from '@apollo/react-hooks';
 import { CHAT_SUBSCRIPTION, MESSAGE_SUBSCRIPTION } from '../../gql/subscriptions';
 
 import Divider from '@material-ui/core/Divider'
+import Typography from '@material-ui/core/Typography';
 
 export default function ChatList({ data, loading, subscribeToMore, handleOpenChat, user }) {
 
     useEffect(() => {
-
         const unsubscribe = subscribeToMore({
             document: CHAT_SUBSCRIPTION,
             variables: { userId: user.id },
@@ -58,7 +58,7 @@ const ChatLink = ({ handleOpenChat, chat, user }) => {
             <div>
                 <li style={{ listStyle: 'none', padding: '15px' }} onClick={() => handleOpenChat(chat)}>
                     <div>{chat.users[0].alias}</div>
-                    <div>{message ? message.sender.id !== user.id ? <><span style={{ fontWeight: 700 }}>New:</span> <span>{message.body}</span></> : <span>{message.body}</span> : chat.messages[0] ? chat.messages[0].body : 'No messages.'}</div>
+                    <Typography noWrap>{message ? message.sender.id !== user.id ? <><span style={{ fontWeight: 700 }}>New:</span> <span>{message.body}</span></> : <span>{message.body}</span> : chat.messages[0] ? chat.messages[0].body : 'No messages.'}</Typography>
                 </li>
                 <Divider />
             </div>

@@ -105,7 +105,6 @@ module.exports = {
         email,
         alias,
         password,
-        chats,
         createdAt: new Date().toISOString()
       });
 
@@ -118,11 +117,6 @@ module.exports = {
         id: res._id,
         token
       };
-    }
-  },
-  User: {
-    async chats(user, args, context, info) {
-      return (await user.populate('chats').execPopulate()).chats;
     }
   }
 };

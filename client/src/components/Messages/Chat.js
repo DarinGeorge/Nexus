@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { TextField } from '@material-ui/core';
+import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import { MESSAGE_SUBSCRIPTION } from '../../gql/subscriptions';
 import moment from 'moment';
@@ -67,47 +68,60 @@ function Chat({
               margin: 0,
               padding: '0 15px',
               height: '87vh',
-              overflowY: 'scroll'
+              overflowY: 'scroll',
+              display: 'flex',
+              flexFlow: 'column',
             }}
           >
             {currentlyOpenChats.new === false ? data.messages.map((message, index) => (
-              <li
+              <div
                 style={
                   message.sender.id === user.id
                     ? {
                       listStyle: 'none',
-                      maxWidth: '200px',
-                      margin: '15px 0 5px auto'
+                      marginTop: '15px',
+                      display: 'flex',
+                      flexFlow: 'column',
+                      justifyContent: 'center',
+                      alignSelf: 'flex-end',
+                      maxWidth: 250
                     }
                     : {
                       listStyle: 'none',
-                      maxWidth: '200px',
-                      margin: '15px 0 5px'
+                      marginTop: '15px',
+                      display: 'flex',
+                      flexFlow: 'column',
+                      justifyContent: 'center',
+                      alignSelf: 'flex-start',
+                      maxWidth: 250
                     }
                 }
                 key={index}
               >
-                <p
+                <Typography
+                  variant="body2" gutterBottom
                   style={
                     message.sender.id === user.id
                       ? {
                         backgroundColor: '#ffd10d',
-                        maxWidth: '500px',
                         borderRadius: '10px 10px 0 10px',
                         padding: 10,
-                        margin: 0
+                        width: 'fit-content',
+                        wordBreak: 'break-all',
+                        whiteSpace: 'normal'
                       }
                       : {
                         backgroundColor: '#ccc',
-                        maxWidth: '500px',
                         borderRadius: '10px 10px 10px 0',
                         padding: 10,
-                        margin: 0
+                        width: 'fit-content',
+                        wordBreak: 'break-all',
+                        whiteSpace: 'normal'
                       }
                   }
                 >
                   {message.body}
-                </p>
+                </Typography>
                 <span
                   style={{
                     color: '#8e8e8e',
@@ -117,7 +131,7 @@ function Chat({
                 >
                   {moment(message.createdAt).fromNow()}
                 </span>
-              </li>
+              </div>
             )) : (
                 <div>Write your message below to begin your conversation.</div>
               )}

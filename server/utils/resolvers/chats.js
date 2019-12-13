@@ -51,6 +51,23 @@ module.exports = {
       await chat.save();
 
       return chat;
+    },
+    async deleteChat(_, { chatId }, context) {
+      const user = authorizer(context);
+      try {
+        const chat = await Chat.findById(chatId);
+
+        if (chat) {
+          await Chat.update({
+            deleted: true
+          });
+          return 'Chat deleted successfully.';
+        } else {
+          throw new AuthenticationError('Action not allowed.');
+        }
+      } catch (err) {
+        throw new Error(err);
+      }
     }
   },
   Subscription: {

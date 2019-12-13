@@ -1,6 +1,14 @@
 const { gql } = require('apollo-server');
 
 module.exports = gql`
+  type User {
+    id: ID!
+    email: String!
+    token: String!
+    alias: String!
+    # chats(limit: Int): [Chat!]!
+    createdAt: String!
+  }
   type Post {
     id: ID!
     user: String!
@@ -15,14 +23,6 @@ module.exports = gql`
     createdAt: String!
     alias: String!
     body: String!
-  }
-  type User {
-    id: ID!
-    email: String!
-    token: String!
-    alias: String!
-    chats(limit: Int): [Chat!]!
-    createdAt: String!
   }
   type Chat {
     id: ID!
@@ -41,6 +41,11 @@ module.exports = gql`
     createdAt: String!
     updatedAt: String!
   }
+  type Connection {
+    id: ID!
+    users: [User!]!
+    createdAt: String!
+  }
   input RegisterInput {
     alias: String!
     password: String!
@@ -48,6 +53,7 @@ module.exports = gql`
     email: String!
   }
   type Query {
+    connections(userId: ID!): [Connection]
     messages(chatId: ID!, limit: Int): [Message!]
     posts: [Post]
     post(postId: ID!): Post
@@ -64,7 +70,10 @@ module.exports = gql`
     deleteComment(postId: ID!, commentId: ID!): Post!
 
     startChat(title: String, userIds: [ID!]!): Chat
+    deleteChat(chatId: ID!): Chat
     createMessage(chatId: ID!, body: String!): Message
+
+    createConnection(userIds: [ID!]!): Connection
   }
   type Subscription {
     newMessage(chatId: ID, userId: ID): Message!
