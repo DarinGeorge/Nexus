@@ -14,11 +14,14 @@ import Layout from './components/base/layout';
 import { AuthProvider } from './utils/context/auth';
 import { AuthRoute, ProtectedRoute } from './utils/helpers/routeTypes';
 import PostView from './components/Feed/PostView';
+import ReactNotifications from 'react-notifications-component';
 
 function App() {
+
   return (
     <AuthProvider>
       <Router>
+        <ReactNotifications />
         <Layout>
           <Route exact path='/' component={Home} />
           <AuthRoute exact path='/auth/login' component={Login} />

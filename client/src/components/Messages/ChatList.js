@@ -1,9 +1,10 @@
 import React, { useEffect } from 'react';
-import { useSubscription } from '@apollo/react-hooks';
+import { useSubscription, useMutation } from '@apollo/react-hooks';
 import { CHAT_SUBSCRIPTION, MESSAGE_SUBSCRIPTION } from '../../gql/subscriptions';
 
 import Divider from '@material-ui/core/Divider'
 import Typography from '@material-ui/core/Typography';
+import gql from 'graphql-tag';
 
 export default function ChatList({ data, loading, subscribeToMore, handleOpenChat, user }) {
 
@@ -53,6 +54,19 @@ const ChatLink = ({ handleOpenChat, chat, user }) => {
     })
     const message = data && data.newMessage
 
+    const [pushNotification] = useMutation(PUSH_NOTIFICATION, {
+        variables: {
+            label: message && message.body,
+            user: message && message.sender.alias
+        }
+    });
+
+    useEffect(() => {
+        if (message && message.chat === chat.id) {
+            message.sender.id !== user.id && pushNotification();
+        }
+    }, [message, pushNotification, chat.id, user.id])
+
     return (
         <>
             <div>
@@ -65,3 +79,12 @@ const ChatLink = ({ handleOpenChat, chat, user }) => {
         </>
     )
 }
+
+const PUSH_NOTIFICATION = gql`
+    mutation pushNotification($label: String!, $user: String!){
+        pushNotification(label: $label, user: $user) {
+            label
+            user
+        }
+    }
+`

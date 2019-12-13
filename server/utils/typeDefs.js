@@ -46,6 +46,10 @@ module.exports = gql`
     users: [User!]!
     createdAt: String!
   }
+  type Notification {
+    label: String!
+    user: String!
+  }
   input RegisterInput {
     alias: String!
     password: String!
@@ -53,6 +57,7 @@ module.exports = gql`
     email: String!
   }
   type Query {
+    notifications: [Notification]
     connections(userId: ID!): [Connection]
     messages(chatId: ID!, limit: Int): [Message!]
     posts: [Post]
@@ -74,9 +79,12 @@ module.exports = gql`
     createMessage(chatId: ID!, body: String!): Message
 
     createConnection(userIds: [ID!]!): Connection
+
+    pushNotification(label: String!, user: String!): Notification
   }
   type Subscription {
     newMessage(chatId: ID, userId: ID): Message!
     newChat(userId: ID!): Chat!
+    newNotification: Notification!
   }
 `;

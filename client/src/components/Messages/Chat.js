@@ -108,7 +108,8 @@ function Chat({
                         padding: 10,
                         width: 'fit-content',
                         wordBreak: 'break-all',
-                        whiteSpace: 'normal'
+                        whiteSpace: 'normal',
+                        alignSelf: 'flex-end'
                       }
                       : {
                         backgroundColor: '#ccc',

@@ -30,3 +30,12 @@ export const CHAT_SUBSCRIPTION = gql`
     }
   }
 `;
+
+export const NOTIFICATION_SUBSCRIPTION = gql`
+  subscription {
+    newNotification {
+      label
+      user
+    }
+  }
+`;
