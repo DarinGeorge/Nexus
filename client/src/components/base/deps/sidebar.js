@@ -1,10 +1,11 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
 import List from '@material-ui/core/List';
 import { Link } from 'react-router-dom';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
+import RadioButtonCheckedIcon from '@material-ui/icons/RadioButtonChecked';
 import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
@@ -19,6 +20,8 @@ import NotificationsIcon from '@material-ui/icons/Notifications';
 import SettingsIcon from '@material-ui/icons/Settings';
 import { withRouter } from 'react-router-dom';
 import { AuthContext } from '../../../utils/context/auth';
+import { useSubscription } from '@apollo/react-hooks';
+import { NOTIFICATION_SUBSCRIPTION } from '../../../gql/subscriptions';
 
 const drawerWidth = 240;
 
@@ -93,14 +96,25 @@ const useStyles = makeStyles(theme => ({
   },
   active: {
     color: '#ffd10d'
+  },
+  notificationCounter: {
+    position: 'relative',
+    left: '-45px',
+    top: '-7px',
+    background: '#ffd10d',
+    padding: '1px 5px',
+    fontSize: '10px',
+    lineHeight: '14.5px',
+    borderRadius: '100%'
   }
 }));
 
 function Sidebar(props) {
   const classes = useStyles();
   const { user, logout } = useContext(AuthContext);
-  const [open, setOpen] = React.useState(false);
-
+  const [open, setOpen] = useState(false);
+  const [bundle, pushBundle] = useState([]);
+  console.log(bundle);
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -111,6 +125,14 @@ function Sidebar(props) {
 
   const isActive = value =>
     props.location.pathname === value ? classes.active : '';
+
+  const { data: notifications } = useSubscription(NOTIFICATION_SUBSCRIPTION);
+
+  useEffect(() => {
+    if (notifications) {
+      pushBundle([notifications]);
+    }
+  }, [notifications, pushBundle]);
 
   return (
     <>
@@ -140,28 +162,33 @@ function Sidebar(props) {
               </IconButton>
             </>
           ) : (
-              <IconButton onClick={handleDrawerOpen}>
-                <FiberManualRecordIcon
-                  style={{ fontSize: '10px' }}
-                  fontSize='inherit'
-                />
-              </IconButton>
-            )}
+            <IconButton onClick={handleDrawerOpen}>
+              <FiberManualRecordIcon
+                style={{ fontSize: '10px' }}
+                fontSize='inherit'
+              />
+            </IconButton>
+          )}
         </div>
 
         {user ? (
           <>
             <List>
-              <ListItem button className={classes.toolbar}>
-                <ListItemIcon className={classes.userImg}>
-                  <Avatar
-                    alt='Remy Sharp'
-                    src='https://via.placeholder.com/40'
-                    className={classes.avatar}
-                  />
-                </ListItemIcon>
-                <ListItemText>{user.alias}</ListItemText>
-              </ListItem>
+              <Link to={`/creative/${user.alias}`}>
+                <ListItem button className={classes.toolbar}>
+                  <ListItemIcon
+                    className={classes.userImg}
+                    style={{ margin: '0 10px' }}
+                  >
+                    <Avatar
+                      alt='Remy Sharp'
+                      src='https://via.placeholder.com/40'
+                      className={classes.avatar}
+                    />
+                  </ListItemIcon>
+                  <ListItemText>{user.alias}</ListItemText>
+                </ListItem>
+              </Link>
             </List>
             <Divider />
             <List>
@@ -177,20 +204,6 @@ function Sidebar(props) {
                 </ListItemIcon>
                 <ListItemText>Apps</ListItemText>
               </ListItem>
-              <Link to='/messages'>
-                <ListItem button>
-                  <ListItemIcon
-                    color='inherit'
-                    aria-label='open drawer'
-                    edge='start'
-                  >
-                    <ForumIcon
-                      className={clsx(classes.menuButton, isActive('/messages'))}
-                    />
-                  </ListItemIcon>
-                  <ListItemText>Messages</ListItemText>
-                </ListItem>
-              </Link>
               <ListItem button>
                 <ListItemIcon
                   color='inherit'
@@ -202,10 +215,57 @@ function Sidebar(props) {
                       classes.menuButton,
                       isActive('/notifications')
                     )}
-                  />
+                  ></NotificationsIcon>
                 </ListItemIcon>
+                <span
+                  className={classes.notificationCounter}
+                  style={{
+                    fontWeight: 700,
+                    display: bundle.length === 0 ? 'none' : 'block'
+                  }}
+                >
+                  {bundle.length}
+                </span>
                 <ListItemText>Notifications</ListItemText>
               </ListItem>
+              <Link
+                to='/messages'
+                style={{ textDecoration: 'none', color: 'inherit' }}
+              >
+                <ListItem button>
+                  <ListItemIcon
+                    color='inherit'
+                    aria-label='open drawer'
+                    edge='start'
+                  >
+                    <ForumIcon
+                      className={clsx(
+                        classes.menuButton,
+                        isActive('/messages')
+                      )}
+                    />
+                  </ListItemIcon>
+                  <ListItemText>Messages</ListItemText>
+                </ListItem>
+              </Link>
+              <Link
+                to='/beacons'
+                style={{ textDecoration: 'none', color: 'inherit' }}
+              >
+                <ListItem button>
+                  <ListItemIcon
+                    color='inherit'
+                    aria-label='open drawer'
+                    edge='start'
+                  >
+                    <RadioButtonCheckedIcon
+                      className={clsx(classes.menuButton, isActive('/beacons'))}
+                    ></RadioButtonCheckedIcon>
+                  </ListItemIcon>
+
+                  <ListItemText>Beacons</ListItemText>
+                </ListItem>
+              </Link>
               <ListItem button>
                 <ListItemIcon
                   color='inherit'
@@ -233,36 +293,36 @@ function Sidebar(props) {
             </List>
           </>
         ) : (
-            <>
-              <List>
-                <ListItem button>
-                  <Link to='/auth/register' className={classes.aLinks}>
-                    <ListItemIcon
-                      color='inherit'
-                      aria-label='Sign Up'
-                      edge='start'
-                      className={classes.menuButton}
-                    >
-                      <GroupIcon />
-                    </ListItemIcon>
-                    <ListItemText>Sign Up</ListItemText>
-                  </Link>
-                </ListItem>
-                <ListItem button>
-                  <Link to='/auth/login' className={classes.aLinks}>
-                    <ListItemIcon
-                      color='inherit'
-                      edge='start'
-                      className={classes.menuButton}
-                    >
-                      <GroupIcon />
-                    </ListItemIcon>
-                    <ListItemText>Login</ListItemText>
-                  </Link>
-                </ListItem>
-              </List>
-            </>
-          )}
+          <>
+            <List>
+              <ListItem button>
+                <Link to='/auth/register' className={classes.aLinks}>
+                  <ListItemIcon
+                    color='inherit'
+                    aria-label='Sign Up'
+                    edge='start'
+                    className={classes.menuButton}
+                  >
+                    <GroupIcon />
+                  </ListItemIcon>
+                  <ListItemText>Sign Up</ListItemText>
+                </Link>
+              </ListItem>
+              <ListItem button>
+                <Link to='/auth/login' className={classes.aLinks}>
+                  <ListItemIcon
+                    color='inherit'
+                    edge='start'
+                    className={classes.menuButton}
+                  >
+                    <GroupIcon />
+                  </ListItemIcon>
+                  <ListItemText>Login</ListItemText>
+                </Link>
+              </ListItem>
+            </List>
+          </>
+        )}
       </Drawer>
     </>
   );

@@ -5,6 +5,7 @@ const chatsResolvers = require('./chats');
 const messagesResolvers = require('./messages');
 const connectionsResolvers = require('./connections');
 const notificationsResolvers = require('./notifications');
+const beaconsResolvers = require('./beacons');
 
 module.exports = {
   Post: {
@@ -22,13 +23,17 @@ module.exports = {
   Connection: {
     ...connectionsResolvers.Connection
   },
+  Beacon: {
+    ...beaconsResolvers.Beacon
+  },
   Query: {
     ...postsResolvers.Query,
     ...usersResolvers.Query,
     ...messagesResolvers.Query,
     ...chatsResolvers.Query,
     ...connectionsResolvers.Query,
-    ...notificationsResolvers.Query
+    ...notificationsResolvers.Query,
+    ...beaconsResolvers.Query
   },
   Mutation: {
     ...usersResolvers.Mutation,
@@ -37,7 +42,8 @@ module.exports = {
     ...chatsResolvers.Mutation,
     ...messagesResolvers.Mutation,
     ...connectionsResolvers.Mutation,
-    ...notificationsResolvers.Mutation
+    ...notificationsResolvers.Mutation,
+    ...beaconsResolvers.Mutation
   },
   Subscription: {
     ...messagesResolvers.Subscription,

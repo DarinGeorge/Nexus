@@ -106,3 +106,33 @@ export const CREATE_CHAT = gql`
     }
   }
 `;
+
+export const CREATE_BEACON = gql`
+  mutation(
+    $name: String!
+    $description: String!
+    $location: String!
+    $date: String!
+    $time: String!
+  ) {
+    createBeacon(
+      name: $name
+      description: $description
+      location: $location
+      date: $date
+      time: $time
+    ) {
+      id
+      name
+      date
+      description
+      location
+      time
+      user {
+        id
+        alias
+      }
+      createdAt
+    }
+  }
+`;

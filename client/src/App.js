@@ -6,8 +6,9 @@ import Home from './pages/home';
 import Login from './pages/auth/login';
 import Register from './pages/auth/register';
 import Feed from './pages/feed';
-import Messages from './pages/messages'
+import Messages from './pages/messages';
 import Profile from './pages/profile';
+import Beacon from './pages/beacons';
 
 // Components
 import Layout from './components/base/layout';
@@ -17,7 +18,6 @@ import PostView from './components/Feed/PostView';
 import ReactNotifications from 'react-notifications-component';
 
 function App() {
-
   return (
     <AuthProvider>
       <Router>
@@ -29,6 +29,7 @@ function App() {
           <ProtectedRoute exact path='/messages' component={Messages} />
           <ProtectedRoute exact path='/messages/:id' component={Messages} />
           <ProtectedRoute exact path='/feed' component={Feed} />
+          <ProtectedRoute exact path='/beacons' component={Beacon} />
           <Route path='/feed/:postId' component={PostView} />
           <Route path='/creative/:alias' component={Profile} />
         </Layout>

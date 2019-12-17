@@ -99,3 +99,39 @@ export const FETCH_CHATS = gql`
     }
   }
 `;
+
+export const FETCH_BEACONS = gql`
+  {
+    beacons {
+      id
+      name
+      description
+      location
+      date
+      time
+      user {
+        id
+        alias
+      }
+      createdAt
+    }
+  }
+`;
+
+export const FETCH_BEACONS_BY_USER = gql`
+  query($userId: ID!) {
+    beaconsByUser(userId: $userId) {
+      id
+      name
+      description
+      location
+      date
+      time
+      user {
+        id
+        alias
+      }
+      createdAt
+    }
+  }
+`;

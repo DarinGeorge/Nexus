@@ -47,8 +47,19 @@ module.exports = gql`
     createdAt: String!
   }
   type Notification {
+    id: ID!
     label: String!
     user: String!
+  }
+  type Beacon {
+    id: ID!
+    name: String!
+    description: String!
+    location: String!
+    date: String!
+    time: String!
+    user: User
+    createdAt: String
   }
   input RegisterInput {
     alias: String!
@@ -61,7 +72,9 @@ module.exports = gql`
     connections(userId: ID!): [Connection]
     messages(chatId: ID!, limit: Int): [Message!]
     posts: [Post]
+    beacons: [Beacon]
     post(postId: ID!): Post
+    beaconsByUser(userId: ID!): [Beacon!]!
     users: [User]
     user(userId: ID, alias: String): User
     chats(userId: ID!, limit: Int): [Chat!]
@@ -81,6 +94,15 @@ module.exports = gql`
     createConnection(userIds: [ID!]!): Connection
 
     pushNotification(label: String!, user: String!): Notification
+
+    createBeacon(
+      name: String!
+      location: String!
+      date: String!
+      time: String!
+      description: String!
+    ): Beacon
+    deleteBeacon(beaconId: ID!): String!
   }
   type Subscription {
     newMessage(chatId: ID, userId: ID): Message!

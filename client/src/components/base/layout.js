@@ -59,7 +59,7 @@ export default function Layout({ children }) {
         animationIn: ["animated", "fadeIn"],     // animate.css classes that's applied
         animationOut: ["animated", "fadeOut"],   // animate.css classes that's applied
         dismiss: {
-          duration: 3000
+          duration: 5000
         }
       })
     }
