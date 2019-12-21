@@ -1,163 +1,217 @@
-import React, { useContext, useState, useCallback } from 'react';
+import React, { useContext, useState, useCallback, useEffect } from 'react';
 import Grid from '@material-ui/core/Grid';
 import { useMutation, useQuery } from '@apollo/react-hooks';
 
 import { AuthContext } from '../utils/context/auth';
 import { CREATE_MESSAGE, CREATE_CHAT } from '../gql/mutations';
 import Chat from '../components/Messages/Chat';
-import ChatStarter from '../components/Messages/ChatStarter'
+import ChatStarter from '../components/Messages/ChatStarter';
 import ChatList from '../components/Messages/ChatList';
 import { FETCH_CHATS, FETCH_MESSAGES } from '../gql/queries';
+import { useHistory, useParams } from 'react-router-dom';
 
 export default function Messages() {
-    const { user } = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
 
-    const [currentlyOpenChats, setCurrentlyOpenChats] = useState({
-        id: '',
-        title: '',
+  const history = useHistory();
+  const url = useParams();
+
+  const [currentlyOpenChats, setCurrentlyOpenChats] = useState({
+    id: '',
+    title: '',
+    new: false
+  });
+
+  const [values, setValues] = useState('');
+
+  const [newChat, setNewChat] = useState({
+    userId: '',
+    alias: ''
+  });
+
+  const {
+    data: chatsQuery,
+    loading: chatsLoading,
+    subscribeToMore: subscribeToChats
+  } = useQuery(FETCH_CHATS, {
+    variables: {
+      userId: user.id,
+      limit: 20
+    }
+  });
+
+  const {
+    data: messagesQuery,
+    loading: messagesLoading,
+    subscribeToMore: subscribeToMessages
+  } = useQuery(FETCH_MESSAGES, {
+    variables: {
+      chatId: currentlyOpenChats.id
+    }
+  });
+
+  const [createMessage] = useMutation(CREATE_MESSAGE, {
+    variables: {
+      chatId: currentlyOpenChats.id,
+      body: values
+    },
+    onCompleted(data) {
+      if (data) {
+        setValues('');
+        if (currentlyOpenChats.title.includes('New Message to')) {
+          const match =
+            chatsQuery &&
+            chatsQuery.chats.find(chat => chat.id === data.createMessage.chat);
+          match &&
+            setCurrentlyOpenChats(prev => ({
+              ...prev,
+              title:
+                match.users.length > 2 ? match.title : match.users[0].alias,
+              new: false
+            }));
+        }
+      }
+    }
+  });
+
+  const [startChat, { data: mutationData }] = useMutation(CREATE_CHAT, {
+    variables: {
+      sendTo: newChat.userId
+    },
+    onCompleted(data) {
+      console.log('create chat', data);
+      setNewChat({ userId: '' });
+      setCurrentlyOpenChats({
+        id: data.startChat.id,
+        title:
+          data.startChat.users.length > 2
+            ? data.startChat.title
+            : data.startChat.users[1].alias,
         new: false
-    });
-
-    const [values, setValues] = useState('');
-
-    const [newChat, setNewChat] = useState({
-        userId: '',
-        alias: ''
-    });
-
-    const { data: chatsQuery, loading: chatsLoading, subscribeToMore: subscribeToChats } = useQuery(FETCH_CHATS, {
-        variables: {
-            userId: user.id,
-            limit: 20
-        }
-    });
-
-    const { data: messagesQuery, loading: messagesLoading, subscribeToMore: subscribeToMessages } = useQuery(FETCH_MESSAGES, {
-        variables: {
-            chatId: currentlyOpenChats.id
-        }
-    });
-
-    const [createMessage] = useMutation(CREATE_MESSAGE, {
-        variables: {
-            chatId: currentlyOpenChats.id,
-            body: values
-        },
-        onCompleted(data) {
-            if (data) {
-                setValues('');
-                if (currentlyOpenChats.title.includes('New Message to')) {
-                    const match = chatsQuery && chatsQuery.chats.find(chat => chat.id === data.createMessage.chat);
-                    match && setCurrentlyOpenChats(prev => ({ ...prev, title: match.users.length > 2 ? match.title : match.users[0].alias, new: false }));
-                }
-            }
-        }
-    });
-
-    const [startChat, { data: mutationData }] = useMutation(CREATE_CHAT, {
-        variables: {
-            sendTo: newChat.userId
-        },
-        onCompleted(data) {
-            setNewChat({ userId: '' });
-            setCurrentlyOpenChats({ id: data.startChat.id, title: data.startChat.users.length > 2 ? data.startChat.title : data.startChat.users[0].alias, new: false });
-            createMessage();
-            setValues('');
-        }
-    });
-
-    const handleChange = e => {
-        setValues(e.target.value);
-    };
-
-    const handleSubmit = () => {
-        createMessage();
-    };
-
-    const handleKeyUp = (evt) => {
-        if (evt.keyCode === 13) {
-            handleSubmit();
-        }
-    };
-
-    const beginChat = (id, alias) => {
-        const match = chatsQuery && chatsQuery.chats.find(chat => chat.users[0].alias === alias);
-
-        if (match) {
-            setCurrentlyOpenChats({ id: match.id, title: `New Message to ${alias}`, new: false });
-        } else {
-            setNewChat({ userId: id, alias: alias });
-            setCurrentlyOpenChats({ id: 'temp-chat', title: `New Message to ${alias}`, new: true });
-
-        }
+      });
+      createMessage();
+      setValues('');
     }
+  });
 
-    function submitChat() {
-        startChat();
+  const handleChange = e => {
+    setValues(e.target.value);
+  };
+
+  const handleSubmit = () => {
+    createMessage();
+  };
+
+  const handleKeyUp = evt => {
+    if (evt.keyCode === 13) {
+      handleSubmit();
     }
+  };
 
-    const handleOpenChat = useCallback(chat => {
-        setCurrentlyOpenChats({ id: chat.id, title: chat.users.length > 2 ? chat.title : chat.users[0].alias, new: false });
-        console.log('opening chat right away!')
-    }, []);
+  const beginChat = (id, alias) => {
+    const match =
+      chatsQuery &&
+      chatsQuery.chats.find(chat => chat.users[1].alias === alias);
 
-    return (
-        <>
-            <Grid container>
-                <Grid item xs={2}>
-                    <ChatList
-                        data={chatsQuery}
-                        messageData={messagesQuery}
-                        loading={chatsLoading}
-                        subscribeToMore={subscribeToChats}
-                        subscribeToMessages={subscribeToMessages}
-                        values={values}
-                        handleOpenChat={handleOpenChat}
-                        user={user}
-                        currentlyOpenChats={currentlyOpenChats}
-                    />
-                </Grid>
+    if (match) {
+      setCurrentlyOpenChats({
+        id: match.id,
+        title: `New Message to ${alias}`,
+        new: false
+      });
+    } else {
+      setNewChat({ userId: id, alias: alias });
+      setCurrentlyOpenChats({
+        id: 'temp-chat',
+        title: `New Message to ${alias}`,
+        new: true
+      });
+    }
+  };
 
-                <Grid item xs={7}>
-                    {currentlyOpenChats.id === '' ? (
-                        <h3
-                            style={{
-                                position: 'relative',
-                                top: '40%',
-                                left: '35%',
-                                fontSize: '20px'
-                            }}
-                        >
-                            Hi,{' '}
-                            <span style={{ textTransform: 'capitalize' }}>
-                                {user.alias}
-                            </span>
-                            . Select a Conversation to show it here.
-                        </h3>
-                    ) : (
-                            <Chat
-                                user={user}
-                                handleChange={handleChange}
-                                handleSubmit={handleSubmit}
-                                values={values}
-                                handleKeyUp={handleKeyUp}
-                                currentlyOpenChats={currentlyOpenChats}
-                                submitChat={submitChat}
-                                data={messagesQuery}
-                                loading={messagesLoading}
-                                subscribeToMore={subscribeToMessages}
-                            />
-                        )}
-                </Grid>
+  function submitChat() {
+    startChat();
+  }
 
-                <Grid item xs={3} style={{ borderLeft: '1px solid #eee' }}>
-                    <ChatStarter
-                        beginChat={beginChat}
-                        mutationData={mutationData}
-                        handleOpenChat={handleOpenChat}
-                    />
-                </Grid>
-            </Grid>
-        </>
-    );
+  console.log(url);
+
+  const handleOpenChat = useCallback(
+    chat => {
+      history.push(`/messages/${chat.id}`);
+      console.log('opening chat right away!');
+    },
+    [history]
+  );
+
+  console.log(chatsQuery);
+
+  useEffect(() => {
+    const chat =
+      chatsQuery && chatsQuery.chats.find(chat => chat.id === url.id);
+    console.log(chatsQuery);
+    chat &&
+      setCurrentlyOpenChats({
+        id: url.id,
+        title: chat.users.length > 2 ? chat.title : chat.users[1].alias,
+        new: false
+      });
+  }, [chatsQuery, url.id]);
+
+  return (
+    <>
+      <Grid container>
+        <Grid item xs={2}>
+          <ChatList
+            data={chatsQuery}
+            messageData={messagesQuery}
+            loading={chatsLoading}
+            subscribeToMore={subscribeToChats}
+            subscribeToMessages={subscribeToMessages}
+            values={values}
+            handleOpenChat={handleOpenChat}
+            user={user}
+            currentlyOpenChats={currentlyOpenChats}
+          />
+        </Grid>
+
+        <Grid item xs={7}>
+          {currentlyOpenChats.id === '' ? (
+            <h3
+              style={{
+                position: 'relative',
+                top: '40%',
+                left: '35%',
+                fontSize: '20px'
+              }}
+            >
+              Hi,{' '}
+              <span style={{ textTransform: 'capitalize' }}>{user.alias}</span>.
+              Select a Conversation to show it here.
+            </h3>
+          ) : (
+            <Chat
+              user={user}
+              handleChange={handleChange}
+              handleSubmit={handleSubmit}
+              values={values}
+              handleKeyUp={handleKeyUp}
+              currentlyOpenChats={currentlyOpenChats}
+              submitChat={submitChat}
+              data={messagesQuery}
+              loading={messagesLoading}
+              subscribeToMore={subscribeToMessages}
+            />
+          )}
+        </Grid>
+
+        <Grid item xs={3} style={{ borderLeft: '1px solid #eee' }}>
+          <ChatStarter
+            beginChat={beginChat}
+            mutationData={mutationData}
+            handleOpenChat={handleOpenChat}
+          />
+        </Grid>
+      </Grid>
+    </>
+  );
 }

@@ -9,6 +9,7 @@ import RadioButtonCheckedIcon from '@material-ui/icons/RadioButtonChecked';
 import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
+import DynamicFeedIcon from '@material-ui/icons/DynamicFeed';
 import ListItemText from '@material-ui/core/ListItemText';
 import Avatar from '@material-ui/core/Avatar';
 import clsx from 'clsx';
@@ -239,6 +240,23 @@ function Sidebar(props) {
                 </span>
                 <ListItemText>Notifications</ListItemText>
               </ListItem>
+              <Link
+                to='/feed'
+                style={{ textDecoration: 'none', color: 'inherit' }}
+              >
+                <ListItem button>
+                  <ListItemIcon
+                    color='inherit'
+                    aria-label='open drawer'
+                    edge='start'
+                  >
+                    <DynamicFeedIcon
+                      className={clsx(classes.menuButton, isActive('/feed'))}
+                    />
+                  </ListItemIcon>
+                  <ListItemText>Feed</ListItemText>
+                </ListItem>
+              </Link>
               <Link
                 to='/messages'
                 style={{ textDecoration: 'none', color: 'inherit' }}

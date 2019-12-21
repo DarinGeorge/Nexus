@@ -6,7 +6,7 @@ import { FETCH_CHATS } from '../gql/queries';
 import { CREATE_MESSAGE } from '../gql/mutations';
 import Chat from '../components/Messages/Chat';
 import { Divider } from '@material-ui/core';
-import ChatStarter from '../components/Messages/ChatStarter'
+import ChatStarter from '../components/Messages/ChatStarter';
 import { CHAT_SUBSCRIPTION } from '../gql/subscriptions';
 
 export default function Messages() {
@@ -24,7 +24,7 @@ export default function Messages() {
     title: ''
   });
 
-  console.log(currentlyOpenChats)
+  console.log(currentlyOpenChats);
 
   const [values, setValues] = useState('');
 
@@ -35,13 +35,16 @@ export default function Messages() {
       updateQuery: (prev, { subscriptionData }) => {
         if (!subscriptionData.data) return prev;
         const newChat = subscriptionData.data.newChat;
-        setCurrentlyOpenChats({ id: newChat.id, title: newChat.users.length > 2 ? newChat.title : newChat.users[0].alias })
+        setCurrentlyOpenChats({
+          id: newChat.id,
+          title:
+            newChat.users.length > 2 ? newChat.title : newchat.users[1].alias
+        });
         return {
           chats: [...prev.chats, newChat]
         };
       }
     });
-
   }, [subscribeToMore, user.id]);
 
   const [createMessage] = useMutation(CREATE_MESSAGE, {
@@ -61,8 +64,11 @@ export default function Messages() {
   };
 
   const handleOpenChat = useCallback(chat => {
-    console.log(chat)
-    setCurrentlyOpenChats({ id: chat.id, title: chat.users.length > 2 ? chat.title : chat.users[0].alias });
+    console.log(chat);
+    setCurrentlyOpenChats({
+      id: chat.id,
+      title: chat.users.length > 2 ? chat.title : chat.users[1].alias
+    });
   }, []);
 
   if (loading) return <p>Loading....</p>;
@@ -100,16 +106,26 @@ export default function Messages() {
                       textAlign: 'left',
                       fontWeight: 700
                     }}
-
                     onClick={() =>
                       setCurrentlyOpenChats({
                         id: chat.id,
-                        title: chat.users.length > 2 ? chat.title : chat.users[0].alias
+                        title:
+                          chat.users.length > 2
+                            ? chat.title
+                            : chat.users[1].alias
                       })
                     }
                   >
-                    <span>{chat.users.length > 2 ? chat.title : chat.users[0].alias}</span>
-                    {chat.messages.length !== 0 ? <p style={{ fontWeight: 400 }}>{chat.messages.map(message => message.body)}</p> : <p style={{ fontWeight: 400 }}>No messages.</p>/*TODO: CHANGE THIS TO CALL A DELETE CHAT MUTATION*/}
+                    <span>
+                      {chat.users.length > 2 ? chat.title : chat.users[1].alias}
+                    </span>
+                    {chat.messages.length !== 0 ? (
+                      <p style={{ fontWeight: 400 }}>
+                        {chat.messages.map(message => message.body)}
+                      </p>
+                    ) : (
+                      <p style={{ fontWeight: 400 }}>No messages.</p>
+                    ) /*TODO: CHANGE THIS TO CALL A DELETE CHAT MUTATION*/}
                   </div>
 
                   <Divider />
@@ -135,14 +151,14 @@ export default function Messages() {
                 . Select a Conversation to show it here.
               </h3>
             ) : (
-                <Chat
-                  user={user}
-                  handleChange={handleChange}
-                  handleSubmit={handleSubmit}
-                  values={values}
-                  currentlyOpenChats={currentlyOpenChats}
-                />
-              )}
+              <Chat
+                user={user}
+                handleChange={handleChange}
+                handleSubmit={handleSubmit}
+                values={values}
+                currentlyOpenChats={currentlyOpenChats}
+              />
+            )}
           </Grid>
 
           <Grid item xs={3} style={{ borderLeft: '1px solid #eee' }}>
