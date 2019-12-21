@@ -83,12 +83,7 @@ function Register() {
   } = useForm(registerUser, initialState);
 
   const [addUser /*loading state: { loading }*/] = useMutation(REGISTER_USER, {
-    update(
-      _,
-      {
-        data: { register: userData }
-      }
-    ) {
+    update(_, { data: { register: userData } }) {
       context.login(userData);
       history.push('/');
     },

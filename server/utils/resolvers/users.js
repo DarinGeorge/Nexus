@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken');
 const { validateRegisterInput, validateLoginInput } = require('../validators');
 const { SECRET_KEY } = require('../../env');
 const { UserInputError } = require('apollo-server');
+const authorizer = require('../authorizer');
 
 function generateToken(user) {
   return jwt.sign(
@@ -62,6 +63,14 @@ module.exports = {
         throw new UserInputError('Incorrect Credentials.', {
           errors
         });
+      } else {
+        const status = { _id: user.id },
+          update = { online: true };
+
+        const setStatus = await User.updateOne(status, update);
+
+        setStatus.n;
+        setStatus.nModified;
       }
 
       const token = generateToken(user);
@@ -71,6 +80,25 @@ module.exports = {
         id: user._id,
         token
       };
+    },
+    async logout(_, { userId }) {
+      const user = await User.findOne({ _id: userId });
+
+      if (user) {
+        console.log(user);
+        const status = { _id: user.id },
+          update = { online: false };
+
+        const setStatus = await User.updateOne(status, update);
+
+        setStatus.n;
+        setStatus.nModified;
+
+        return 'Logout Successful.';
+      }
+      throw new UserInputError(
+        'No User located. Logout may have already been executed.'
+      );
     },
     async register(
       _,
@@ -105,6 +133,7 @@ module.exports = {
         email,
         alias,
         password,
+        online: true,
         createdAt: new Date().toISOString()
       });
 
@@ -117,6 +146,16 @@ module.exports = {
         id: res._id,
         token
       };
+    },
+    async deleteUser(_, { userId }, context) {
+      const user = await User.findOne({ _id: userId });
+      const isAuth = authorizer(context);
+
+      if (user) {
+        isAuth && console.log(user);
+      }
+
+      return 'Success?';
     }
   }
 };

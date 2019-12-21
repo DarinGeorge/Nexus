@@ -20,8 +20,9 @@ import NotificationsIcon from '@material-ui/icons/Notifications';
 import SettingsIcon from '@material-ui/icons/Settings';
 import { withRouter } from 'react-router-dom';
 import { AuthContext } from '../../../utils/context/auth';
-import { useSubscription } from '@apollo/react-hooks';
+import { useSubscription, useMutation } from '@apollo/react-hooks';
 import { NOTIFICATION_SUBSCRIPTION } from '../../../gql/subscriptions';
+import { LOGOUT_USER } from '../../../gql/mutations';
 
 const drawerWidth = 240;
 
@@ -114,7 +115,12 @@ function Sidebar(props) {
   const { user, logout } = useContext(AuthContext);
   const [open, setOpen] = useState(false);
   const [bundle, pushBundle] = useState([]);
-  console.log(bundle);
+  const [logoutUserStatusSet] = useMutation(LOGOUT_USER, {
+    variables: {
+      userId: user.id
+    }
+  });
+
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -133,6 +139,11 @@ function Sidebar(props) {
       pushBundle([notifications]);
     }
   }, [notifications, pushBundle]);
+
+  const handleLogout = () => {
+    logoutUserStatusSet();
+    logout();
+  };
 
   return (
     <>
@@ -284,7 +295,7 @@ function Sidebar(props) {
                   aria-label='open drawer'
                   edge='start'
                   className={classes.menuButton}
-                  onClick={logout}
+                  onClick={handleLogout}
                 >
                   <ExitToAppIcon />
                 </ListItemIcon>

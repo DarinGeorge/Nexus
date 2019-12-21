@@ -1,4 +1,4 @@
-const { model, Schema } = require("mongoose");
+const { model, Schema } = require('mongoose');
 
 const UserSchema = new Schema({
   alias: String,
@@ -6,12 +6,7 @@ const UserSchema = new Schema({
   email: String,
   birthday: Date,
   createdAt: String,
-  chats: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: "Chat"
-    }
-  ]
+  online: Boolean
 });
 
-module.exports = model("User", UserSchema);
+module.exports = model('User', UserSchema);

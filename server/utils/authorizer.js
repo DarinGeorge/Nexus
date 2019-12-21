@@ -11,10 +11,10 @@ module.exports = context => {
         const user = jwt.verify(token, SECRET_KEY);
         return user;
       } catch (error) {
-        throw new AuthenticationError('Invalid/Expired token');
+        throw new AuthenticationError('Invalid/Expired token.');
       }
     }
-    throw new Error("Authentication token must be 'Bearer [token]");
+    throw new Error("Authentication token must be 'Bearer [token].");
   }
-  throw new Error('Authorization header must be provided');
+  throw new Error('Authorization header must be provided.');
 };

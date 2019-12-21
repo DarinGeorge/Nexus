@@ -6,7 +6,7 @@ module.exports = gql`
     email: String!
     token: String!
     alias: String!
-    # chats(limit: Int): [Chat!]!
+    online: Boolean!
     createdAt: String!
   }
   type Post {
@@ -81,7 +81,9 @@ module.exports = gql`
   }
   type Mutation {
     register(registerInput: RegisterInput): User!
+    deleteUser(userId: ID!): String!
     login(alias: String!, password: String!): User!
+    logout(userId: ID!): String!
     createPost(body: String!): Post!
     deletePost(postId: ID!): String!
     createComment(postId: ID!, body: String!): Post!

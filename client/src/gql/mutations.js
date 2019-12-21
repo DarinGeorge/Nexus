@@ -12,6 +12,12 @@ export const LOGIN_USER = gql`
   }
 `;
 
+export const LOGOUT_USER = gql`
+  mutation logout($userId: ID!) {
+    logout(userId: $userId)
+  }
+`;
+
 export const REGISTER_USER = gql`
   mutation register(
     $alias: String!

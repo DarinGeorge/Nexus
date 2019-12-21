@@ -37,7 +37,7 @@ export default function Profile() {
   if (!data) {
     profileMarkup = <p>Loading...</p>;
   } else {
-    const { id, alias, createdAt, email } = data.user;
+    const { id, alias, createdAt, email, online } = data.user;
     profileMarkup = (
       <div>
         <div className={classes.radial}>
@@ -47,6 +47,7 @@ export default function Profile() {
         <p>ID: {id}</p>
         <p>Email: {email}</p>
         <p>Joined Nexus: {moment(createdAt).fromNow()}</p>
+        <p>Status: {online ? 'Online' : 'Offline'}</p>
 
         <br />
         <Beacons id={id} />

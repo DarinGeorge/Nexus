@@ -9,41 +9,42 @@ export const useForm = (callback, initialState = {}) => {
   const [errors, setErrors] = React.useState({});
   const { enqueueSnackbar } = useSnackbar();
 
+  console.log(errors);
+
   const handleChange = e => {
     setValues({ ...values, [e.target.name]: e.target.value });
+
+    if (Object.keys(errors).length) {
+      console.log('clearing errors');
+
+      if (errors.general) {
+        setErrors({ ...errors, general: '' });
+      } else {
+        setErrors({ ...errors, [e.target.name]: '' });
+      }
+    }
   };
 
   const handleSubmit = e => {
     e.preventDefault();
     setSubmitting(true);
+    callback();
   };
 
   React.useEffect(() => {
-    if (submitting) {
-      let errCheck = Object.keys(errors).length > 0;
-      if (errCheck) {
-        setSubmitting(false);
-        Object.values(errors).map(value => {
-          // variant could be success, error, warning, info, or default
-          const handleNotify = variant => {
-            enqueueSnackbar(value, {
-              variant,
-              autoHideDuration: 3000
-            });
-          };
+    if (Object.keys(errors).length > 0) {
+      setSubmitting(false);
 
-          handleNotify('error');
-          setTimeout(function () {
-            setErrors({});
-          }, 5000);
-          return errors;
-        });
-      } else {
-        setSubmitting(false);
-        callback();
-      }
+      Object.values(errors).forEach(value => {
+        // variant could be success, error, warning, info, or default
+        value !== '' &&
+          enqueueSnackbar(value, {
+            variant: 'error',
+            autoHideDuration: 3000
+          });
+      });
     }
-  }, [submitting, errors, callback, enqueueSnackbar]);
+  }, [errors, callback, enqueueSnackbar]);
 
   return {
     handleSubmit,

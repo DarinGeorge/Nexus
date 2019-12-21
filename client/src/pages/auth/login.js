@@ -76,12 +76,7 @@ function Login(props) {
   } = useForm(loginUser, initialState);
 
   const [acceptUser /* loading state: { loading }*/] = useMutation(LOGIN_USER, {
-    update(
-      _,
-      {
-        data: { login: userData }
-      }
-    ) {
+    update(_, { data: { login: userData } }) {
       context.login(userData);
       history.push('/');
     },
@@ -113,7 +108,7 @@ function Login(props) {
             id='alias'
             label='Alias'
             name='alias'
-            error={errors.alias ? true : false}
+            error={errors.alias && errors.alias !== '' ? true : false}
             value={values.alias}
             onChange={handleChange}
           />
@@ -126,7 +121,7 @@ function Login(props) {
             label='Password'
             type='password'
             id='password'
-            error={errors.password ? true : false}
+            error={errors.password && errors.password !== '' ? true : false}
             value={values.password}
             onChange={handleChange}
           />
